@@ -2,10 +2,12 @@ package ethereal
 
 import (
 	"flag"
+	"log"
 )
 
 func CliRun() {
 	database := flag.String("database", "migrate", "action database")
+	seed := flag.String("seed", "up", "action seeder")
 	flag.Parse()
 
 	switch *database {
@@ -16,6 +18,14 @@ func CliRun() {
 	case "refresh":
 		app.Db.DropTable(tables()...)
 		app.Db.AutoMigrate(tables()...)
+	default:
+		log.Println(`This value is not set.`)
+	}
+
+	switch *seed {
+	case "up":
+		role := Role{Name: "User", DisplayName: "User", Description: "Simple user"}
+		app.Db.Save(&role)
 	}
 }
 
