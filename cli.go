@@ -25,7 +25,8 @@ func CliRun() {
 	switch *seed {
 	case "up":
 		role := Role{Name: "User", DisplayName: "User", Description: "Simple user"}
-		app.Db.Save(&role)
+		user := User{Email: "", Name: "", Password: "", Role: role}
+		app.Db.Save(&user)
 	}
 }
 
