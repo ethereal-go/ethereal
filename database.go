@@ -7,7 +7,6 @@ import (
 )
 
 func Database() *gorm.DB {
-	//open a db connection
 	db, err := gorm.Open("mysql", os.Getenv("MYSQL_LOGIN")+
 		":"+os.Getenv("MYSQL_PASSWORD")+
 		"@/"+os.Getenv("MYSQL_DATABASE")+"?charset=utf8&parseTime=True&loc=Local")

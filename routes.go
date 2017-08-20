@@ -6,6 +6,7 @@ import (
 	"github.com/joho/godotenv"
 	"log"
 	"net/http"
+	"os"
 	"strconv"
 )
 
@@ -15,19 +16,25 @@ type App struct {
 
 func Run() {
 	envLoading()
-	router := gin.Default()
 	Database()
-	//app := App{Db: Database()}
+	if len(os.Args) > 1 {
+		CliRun()
+	} else {
+		router := gin.Default()
 
-	v1 := router.Group("/api/v1/todos")
-	{
-		v1.POST("/", CreateTodo)
-		//v1.GET("/", FetchAllTodo)
-		//v1.GET("/:id", FetchSingleTodo)
-		//v1.PUT("/:id", UpdateTodo)
-		//v1.DELETE("/:id", DeleteTodo)
+		//app := App{Db: Database()}
+
+		v1 := router.Group("/api/v1/todos")
+		{
+			v1.POST("/", CreateTodo)
+			//v1.GET("/", FetchAllTodo)
+			//v1.GET("/:id", FetchSingleTodo)
+			//v1.PUT("/:id", UpdateTodo)
+			//v1.DELETE("/:id", DeleteTodo)
+		}
+		router.Run()
 	}
-	router.Run()
+
 }
 
 func envLoading() {
@@ -35,9 +42,6 @@ func envLoading() {
 	if err != nil {
 		log.Fatal("Error loading .env file")
 	}
-
-	//s3Bucket := os.Getenv("S3_BUCKET")
-	//secretKey := os.Getenv("SECRET_KEY")
 }
 
 func CreateTodo(c *gin.Context) {
