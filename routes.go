@@ -14,16 +14,15 @@ type App struct {
 	Db *gorm.DB
 }
 
+var app App
+
 func Run() {
 	envLoading()
-	Database()
+	app = App{Db: Database()}
 	if len(os.Args) > 1 {
 		CliRun()
 	} else {
 		router := gin.Default()
-
-		//app := App{Db: Database()}
-
 		v1 := router.Group("/api/v1/todos")
 		{
 			v1.POST("/", CreateTodo)

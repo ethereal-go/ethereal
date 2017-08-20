@@ -11,6 +11,6 @@ func CliRun() {
 
 	switch *database {
 	case "migrate":
-
+		app.Db.AutoMigrate(&Todo{})
 	}
 }
