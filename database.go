@@ -22,8 +22,7 @@ type User struct {
 	Name     string `json:"name"`
 	Password string `json:"password"`
 	Role     Role   `json:"role_id"`
-	RoleID   int
-	//Role   Role   `json:"role_id" gorm:"index"`
+	RoleID   int    `gorm:"index"`
 }
 
 type Role struct {
