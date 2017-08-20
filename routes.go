@@ -5,9 +5,7 @@ import (
 	"github.com/jinzhu/gorm"
 	"github.com/joho/godotenv"
 	"log"
-	"net/http"
 	"os"
-	"strconv"
 )
 
 type App struct {
@@ -25,7 +23,10 @@ func Run() {
 		router := gin.Default()
 		v1 := router.Group("/api/v1/todos")
 		{
-			v1.POST("/", CreateTodo)
+			v1.POST("/", func(context *gin.Context) {
+
+			})
+			//v1.POST("/", CreateTodo)
 			//v1.GET("/", FetchAllTodo)
 			//v1.GET("/:id", FetchSingleTodo)
 			//v1.PUT("/:id", UpdateTodo)
@@ -43,10 +44,10 @@ func envLoading() {
 	}
 }
 
-func CreateTodo(c *gin.Context) {
-	completed, _ := strconv.Atoi(c.PostForm("completed"))
-	todo := Todo{Title: c.PostForm("title"), Completed: completed}
-	db := Database()
-	db.Save(&todo)
-	c.JSON(http.StatusCreated, gin.H{"status": http.StatusCreated, "message": "Todo item created successfully!", "resourceId": todo.ID})
-}
+//func CreateTodo(c *gin.Context) {
+//	completed, _ := strconv.Atoi(c.PostForm("completed"))
+//	todo := Todo{Title: c.PostForm("title"), Completed: completed}
+//	db := Database()
+//	db.Save(&todo)
+//	c.JSON(http.StatusCreated, gin.H{"status": http.StatusCreated, "message": "Todo item created successfully!", "resourceId": todo.ID})
+//}

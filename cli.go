@@ -10,8 +10,12 @@ func CliRun() {
 
 	switch *database {
 	case "migrate":
-		app.Db.AutoMigrate(&Todo{})
+		app.Db.AutoMigrate(&User{}, &Role{})
 	case "rollback":
-		app.Db.DropTable(&Todo{})
+		app.Db.DropTable(&User{}, &Role{})
+	case "refresh":
+		app.Db.DropTable(&User{}, &Role{})
+		app.Db.AutoMigrate(&User{}, &Role{})
+
 	}
 }

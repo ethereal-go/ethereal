@@ -16,14 +16,17 @@ func Database() *gorm.DB {
 	return db
 }
 
-type Todo struct {
+type User struct {
 	gorm.Model
-	Title     string `json:"title"`
-	Completed int    `json:"completed"`
+	Email    string `json:"email"`
+	Name     string `json:"name"`
+	Password string `json:"password"`
+	RoleId   int   `json:"role_id";gorm:"index"`
 }
 
-type TransformedTodo struct {
-	ID        uint   `json:"id"`
-	Title     string `json:"title"`
-	Completed bool   `json:"completed"`
+type Role struct {
+	gorm.Model
+	Name        string `json:"name"`
+	DisplayName string `json:"display_name"`
+	Description string `json:"password"`
 }
