@@ -21,7 +21,9 @@ type User struct {
 	Email    string `json:"email"`
 	Name     string `json:"name"`
 	Password string `json:"password"`
-	RoleId   int   `json:"role_id";gorm:"index"`
+	Role     Role   `json:"role_id"`
+	RoleID   int
+	//Role   Role   `json:"role_id" gorm:"index"`
 }
 
 type Role struct {

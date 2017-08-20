@@ -10,12 +10,17 @@ func CliRun() {
 
 	switch *database {
 	case "migrate":
-		app.Db.AutoMigrate(&User{}, &Role{})
+		app.Db.AutoMigrate(tables()...)
+		app.Db.Model(&User{}).AddForeignKey("role_id", "roles(id)", "RESTRICT", "RESTRICT")
 	case "rollback":
-		app.Db.DropTable(&User{}, &Role{})
+		app.Db.DropTable(tables()...)
 	case "refresh":
-		app.Db.DropTable(&User{}, &Role{})
-		app.Db.AutoMigrate(&User{}, &Role{})
-
+		app.Db.DropTable(tables()...)
+		app.Db.AutoMigrate(tables()...)
+		app.Db.Model(&User{}).AddForeignKey("role_id", "roles(id)", "RESTRICT", "RESTRICT")
 	}
+}
+
+func tables() []interface{} {
+	return []interface{}{&User{}, &Role{}}
 }
