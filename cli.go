@@ -30,6 +30,9 @@ func CliRun() {
 	}
 }
 
+/**
+/ Get list tables
+*/
 func tables() []interface{} {
 	return []interface{}{&User{}, &Role{}}
 }
