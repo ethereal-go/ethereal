@@ -2,11 +2,6 @@ package ethereal
 
 import "github.com/qor/i18n"
 
-const (
-	en_US = "en-US"
-	ru_RU = "ru-RU"
-)
-
 type ErrSeedI18N interface {
 	fill()
 }
@@ -31,5 +26,12 @@ func getTypesLanguage() []ErrSeedI18N {
 func SeedI18N() {
 	for _, typeI18n := range getTypesLanguage() {
 		typeI18n.fill()
+	}
+}
+
+func mapLanguage() map[string]string {
+	return map[string]string{
+		"en-us": "en-US",
+		"ru-ru": "ru-Ru",
 	}
 }
