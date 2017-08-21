@@ -4,20 +4,29 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
 	"github.com/joho/godotenv"
+	"github.com/qor/i18n"
+	"github.com/qor/i18n/backends/database"
 	"log"
 	"net/http"
 	"os"
 )
 
 type App struct {
-	Db *gorm.DB
+	Db   *gorm.DB
+	I18n *i18n.I18n
 }
 
 var app App
 
 func Run() {
 	envLoading()
-	app = App{Db: Database()}
+	db := Database()
+	I18n := i18n.New(
+		database.New(db),
+	)
+	app = App{Db: Database(), I18n: I18n}
+
+	SeedI18N()
 	if len(os.Args) > 1 {
 		CliRun()
 	} else {
