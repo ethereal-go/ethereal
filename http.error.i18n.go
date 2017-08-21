@@ -1,5 +1,7 @@
 package ethereal
 
+import "github.com/qor/i18n"
+
 type ErrSeedI18N interface {
 	fill()
 }
@@ -9,11 +11,11 @@ type EnUS struct{}
 type RuRU struct{}
 
 func (en EnUS) fill() {
-	app.I18n.Default("Success").T("en-US", "StatusOK")
+	app.I18n.SaveTranslation(&i18n.Translation{Key: "StatusOK", Locale: "en-US", Value: "Success"})
 }
 
 func (ru RuRU) fill() {
-	app.I18n.Default("Успешно").T("ru-RU", "StatusOK")
+	app.I18n.SaveTranslation(&i18n.Translation{Key: "StatusOK", Locale: "ru-RU", Value: "Успешно"})
 }
 
 func getTypesLanguage() []ErrSeedI18N {
