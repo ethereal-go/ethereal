@@ -2,6 +2,11 @@ package ethereal
 
 import "github.com/qor/i18n"
 
+const (
+	en_US = "en-US"
+	ru_RU = "ru-RU"
+)
+
 type ErrSeedI18N interface {
 	fill()
 }

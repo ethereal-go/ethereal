@@ -33,8 +33,8 @@ func Run() {
 		router := gin.Default()
 		v1 := router.Group("/api/v1/users")
 		{
-			//v1.POST("/", CreateTodo)
 			v1.GET("/", FetchAllUsers)
+			//v1.POST("/", CreateTodo)
 			//v1.GET("/:id", FetchSingleTodo)
 			//v1.PUT("/:id", UpdateTodo)
 			//v1.DELETE("/:id", DeleteTodo)
