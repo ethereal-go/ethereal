@@ -216,7 +216,7 @@ func main() {
 	})
 	http.Handle("/graphql", h)
 	// Serve static files
-	fs := http.FileServer(http.Dir("static"))
+	fs := http.FileServer(http.Dir("../static"))
 	http.Handle("/", fs)
 	// Display some basic instructions
 	fmt.Println("Now server is running on port 8080")
