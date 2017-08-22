@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"github.com/graphql-go/graphql"
+	"github.com/graphql-go/graphql/testutil"
 	"github.com/graphql-go/handler"
 	"math/rand"
 	"net/http"
@@ -210,7 +211,7 @@ func main() {
 	//	json.NewEncoder(w).Encode(result)
 	//})
 	h := handler.New(&handler.Config{
-		Schema: &schema,
+		Schema: &testutil.StarWarsSchema,
 		Pretty: true,
 	})
 	http.Handle("/graphql", h)
