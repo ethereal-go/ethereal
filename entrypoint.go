@@ -4,8 +4,12 @@ import (
 	"fmt"
 	"github.com/graphql-go/graphql"
 	"github.com/graphql-go/handler"
+	"github.com/qor/i18n"
+	"github.com/qor/i18n/backends/database"
 	"math/rand"
 	"net/http"
+	"path"
+	"runtime"
 	"time"
 )
 
@@ -34,6 +38,24 @@ func init() {
 
 	rand.Seed(time.Now().UnixNano())
 }
+
+var usersType = graphql.NewObject(graphql.ObjectConfig{
+	Name: "Users",
+	Fields: graphql.Fields{
+		"id": &graphql.Field{
+			Type: graphql.String,
+		},
+		"email": &graphql.Field{
+			Type: graphql.String,
+		},
+		"name": &graphql.Field{
+			Type: graphql.String,
+		},
+		"password": &graphql.Field{
+			Type: graphql.String,
+		},
+	},
+})
 
 // define custom GraphQL ObjectType `todoType` for our Golang struct `Todo`
 // Note that
@@ -138,7 +160,31 @@ var rootMutation = graphql.NewObject(graphql.ObjectConfig{
 var rootQuery = graphql.NewObject(graphql.ObjectConfig{
 	Name: "RootQuery",
 	Fields: graphql.Fields{
-
+		"users": &graphql.Field{
+			Type:        usersType,
+			Description: "Get single todo",
+			Args: graphql.FieldConfigArgument{
+				"id": &graphql.ArgumentConfig{
+					Type: graphql.String,
+				},
+			},
+			Resolve: func(params graphql.ResolveParams) (interface{}, error) {
+				var users []User
+				app.Db.Find(&users)
+				return  users, nil
+				//idQuery, isOK := params.Args["id"].(string)
+				//if isOK {
+				//	// Search for el with id
+				//	for _, todo := range TodoList {
+				//		if todo.ID == idQuery {
+				//			return todo, nil
+				//		}
+				//	}
+				//}
+				//
+				//return Todo{}, nil
+			},
+		},
 		/*
 		   curl -g 'http://localhost:8080/graphql?query={todo(id:"b"){id,text,done}}'
 		*/
@@ -204,8 +250,13 @@ func executeQuery(query string, schema graphql.Schema) *graphql.Result {
 	return result
 }
 
-func S() {
-
+func Start() {
+	envLoading()
+	db := Database()
+	I18n := i18n.New(
+		database.New(db),
+	)
+	app = App{Db: Database(), I18n: I18n}
 	//http.HandleFunc("/graphql", func(w http.ResponseWriter, r *http.Request) {
 	//	result := executeQuery(r.URL.Query().Get("query"), schema)
 	//	json.NewEncoder(w).Encode(result)
@@ -216,7 +267,9 @@ func S() {
 	})
 	http.Handle("/graphql", h)
 	// Serve static files
-	fs := http.FileServer(http.Dir("../static"))
+	_, filename, _, _ := runtime.Caller(0)
+	//fmt.Println(path.Dir(filename))
+	fs := http.FileServer(http.Dir(path.Dir(filename) + "/static"))
 	http.Handle("/", fs)
 	// Display some basic instructions
 	//fmt.Println("Now server is running on port 8080")
