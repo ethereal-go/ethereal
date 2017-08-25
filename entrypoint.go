@@ -40,7 +40,7 @@ func init() {
 }
 
 var usersType = graphql.NewObject(graphql.ObjectConfig{
-	Name: "Users",
+	Name: "usersType",
 	Fields: graphql.Fields{
 		"id": &graphql.Field{
 			Type: graphql.String,
@@ -161,17 +161,18 @@ var rootQuery = graphql.NewObject(graphql.ObjectConfig{
 	Name: "RootQuery",
 	Fields: graphql.Fields{
 		"users": &graphql.Field{
-			Type:        usersType,
+			Type:        graphql.NewList(usersType),
 			Description: "Get single todo",
-			Args: graphql.FieldConfigArgument{
-				"id": &graphql.ArgumentConfig{
-					Type: graphql.String,
-				},
-			},
+			//Args: graphql.FieldConfigArgument{
+			//	"id": &graphql.ArgumentConfig{
+			//		Type: graphql.String,
+			//	},
+			//},
 			Resolve: func(params graphql.ResolveParams) (interface{}, error) {
 				var users []User
 				app.Db.Find(&users)
-				return  users, nil
+				fmt.Println(users)
+				return users, nil
 				//idQuery, isOK := params.Args["id"].(string)
 				//if isOK {
 				//	// Search for el with id
