@@ -40,7 +40,7 @@ func init() {
 }
 
 var usersType = graphql.NewObject(graphql.ObjectConfig{
-	Name: "usersType",
+	Name: "User",
 	Fields: graphql.Fields{
 		"id": &graphql.Field{
 			Type: graphql.String,
@@ -171,19 +171,19 @@ var rootQuery = graphql.NewObject(graphql.ObjectConfig{
 			Resolve: func(params graphql.ResolveParams) (interface{}, error) {
 				var users []User
 				app.Db.Find(&users)
-				fmt.Println(users)
-				return users, nil
+				fmt.Println(users[0].Name)
 				//idQuery, isOK := params.Args["id"].(string)
 				//if isOK {
 				//	// Search for el with id
-				//	for _, todo := range TodoList {
-				//		if todo.ID == idQuery {
+				//	for _, todo := range users {
+				//		fmt.Println(todo)
+				//		if string(todo.ID) == idQuery {
 				//			return todo, nil
 				//		}
 				//	}
 				//}
-				//
-				//return Todo{}, nil
+
+				return users, nil
 			},
 		},
 		/*
