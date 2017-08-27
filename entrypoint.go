@@ -20,15 +20,6 @@ type Todo struct {
 }
 
 var TodoList []Todo
-var letterRunes = []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")
-
-func RandStringRunes(n int) string {
-	b := make([]rune, n)
-	for i := range b {
-		b[i] = letterRunes[rand.Intn(len(letterRunes))]
-	}
-	return string(b)
-}
 
 func init() {
 	todo1 := Todo{ID: "a", Text: "A todo not to forget", Done: false}
@@ -171,9 +162,9 @@ var rootQuery = graphql.NewObject(graphql.ObjectConfig{
 			},
 			Resolve: func(params graphql.ResolveParams) (interface{}, error) {
 				var users []User
-				var roles []Role
+				//var roles []Role
+				//app.Db.Model(&users).Related(&roles)
 				app.Db.Find(&users)
-				app.Db.Model(&users).Related(&roles)
 
 				fmt.Println(users)
 				idQuery, isOK := params.Args["id"].(string)
