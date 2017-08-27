@@ -163,25 +163,23 @@ var rootQuery = graphql.NewObject(graphql.ObjectConfig{
 		"users": &graphql.Field{
 			Type:        graphql.NewList(usersType),
 			Description: "Get single todo",
-			//Args: graphql.FieldConfigArgument{
-			//	"id": &graphql.ArgumentConfig{
-			//		Type: graphql.String,
-			//	},
-			//},
+			Args: graphql.FieldConfigArgument{
+				"id": &graphql.ArgumentConfig{
+					Type: graphql.String,
+				},
+			},
 			Resolve: func(params graphql.ResolveParams) (interface{}, error) {
 				var users []User
 				app.Db.Find(&users)
-				fmt.Println(users[0].Name)
-				//idQuery, isOK := params.Args["id"].(string)
-				//if isOK {
-				//	// Search for el with id
-				//	for _, todo := range users {
-				//		fmt.Println(todo)
-				//		if string(todo.ID) == idQuery {
-				//			return todo, nil
-				//		}
-				//	}
-				//}
+
+				idQuery, isOK := params.Args["id"].(string)
+				if isOK {
+					for _, user := range users {
+						if string(user.ID) == idQuery {
+							return user, nil
+						}
+					}
+				}
 
 				return users, nil
 			},
