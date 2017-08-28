@@ -1,7 +1,6 @@
 package ethereal
 
 import (
-	"fmt"
 	"github.com/graphql-go/graphql"
 	"strconv"
 )
@@ -61,7 +60,6 @@ var UserField = graphql.Field{
 		for _, user := range users {
 			var role Role
 			app.Db.Model(&user).Related(&role)
-			fmt.Println(role)
 			user.Role = role
 		}
 

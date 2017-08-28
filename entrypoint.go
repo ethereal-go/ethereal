@@ -8,6 +8,7 @@ import (
 	"github.com/qor/i18n"
 	"github.com/qor/i18n/backends/database"
 	"net/http"
+	"os"
 	"path"
 	"runtime"
 )
@@ -122,24 +123,30 @@ func Start() {
 	)
 
 	app = App{Db: Database(), I18n: I18n}
-	//http.HandleFunc("/graphql", func(w http.ResponseWriter, r *http.Request) {
-	//	result := executeQuery(r.URL.Query().Get("query"), schema)
-	//	json.NewEncoder(w).Encode(result)
-	//})
-	h := handler.New(&handler.Config{
-		Schema: &schema,
-		Pretty: true,
-	})
-	http.Handle("/graphql", h)
-	// Serve static files
-	_, filename, _, _ := runtime.Caller(0)
-	//fmt.Println(path.Dir(filename))
-	fs := http.FileServer(http.Dir(path.Dir(filename) + "/static"))
-	http.Handle("/", fs)
-	fmt.Println("Now server is running on port 8080")
+	SeedI18N()
+	if len(os.Args) > 1 {
+		CliRun()
+	} else {
+		//http.HandleFunc("/graphql", func(w http.ResponseWriter, r *http.Request) {
+		//	result := executeQuery(r.URL.Query().Get("query"), schema)
+		//	json.NewEncoder(w).Encode(result)
+		//})
+		h := handler.New(&handler.Config{
+			Schema: &schema,
+			Pretty: true,
+		})
+		http.Handle("/graphql", middlewareLocal(h))
+		// Serve static files
+		_, filename, _, _ := runtime.Caller(0)
+		//fmt.Println(path.Dir(filename))
+		fs := http.FileServer(http.Dir(path.Dir(filename) + "/static"))
+		http.Handle("/", fs)
+		fmt.Println("Now server is running on port 8080")
 
-	//fmt.Println("Create new todo: curl -g 'http://localhost:8080/graphql?query=mutation+_{createTodo(text:\"My+new+todo\"){id,text,done}}'")
-	//fmt.Println("Update todo: curl -g 'http://localhost:8080/graphql?query=mutation+_{updateTodo(id:\"a\",done:true){id,text,done}}'")
+		//fmt.Println("Create new todo: curl -g 'http://localhost:8080/graphql?query=mutation+_{createTodo(text:\"My+new+todo\"){id,text,done}}'")
+		//fmt.Println("Update todo: curl -g 'http://localhost:8080/graphql?query=mutation+_{updateTodo(id:\"a\",done:true){id,text,done}}'")
 
-	http.ListenAndServe(":8080", nil)
+		http.ListenAndServe(":8080", nil)
+	}
+
 }
