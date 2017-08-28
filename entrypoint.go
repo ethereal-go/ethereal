@@ -116,36 +116,31 @@ var schema, _ = graphql.NewSchema(graphql.SchemaConfig{
 	//Mutation: rootMutation,
 })
 
-func ConstructorDb() func() *gorm.DB {
-	var db *gorm.DB
-	return func() *gorm.DB {
-		if db == nil {
-			envLoading()
-			db = Database()
-		}
-		return db
+func ConstructorDb() *gorm.DB {
+	if app.Db == nil {
+		envLoading()
+		app.Db = Database()
 	}
+	return app.Db
+
 }
-func ConstructorI18N() func() *i18n.I18n {
-	var i18 *i18n.I18n
-	return func() *i18n.I18n {
-		fmt.Println(i18 == nil )
-		if i18 == nil {
-			i18 = i18n.New(
-				database.New(ConstructorDb()()),
-			)
-		}
-		return i18
+func ConstructorI18N() *i18n.I18n {
+	if app.I18n == nil {
+		app.I18n = i18n.New(
+			database.New(ConstructorDb()),
+		)
 	}
+	return app.I18n
 }
+
 func Start() {
 	//envLoading()
 	//db := Database()
 	//I18n := i18n.New(
 	//	database.New(db),
 	//)
-
-	app = App{Db: ConstructorDb()(), I18n: ConstructorI18N()()}
+fmt.Println( string(ConstructorI18N().Scope("graphQL").T("en-US", "User.Description")))
+	app = App{Db: ConstructorDb(), I18n: ConstructorI18N()}
 	SeedI18N()
 	if len(os.Args) > 1 {
 		CliRun()

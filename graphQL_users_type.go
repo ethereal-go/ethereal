@@ -32,7 +32,7 @@ var usersType = graphql.NewObject(graphql.ObjectConfig{
 
 var UserField = graphql.Field{
 	Type:        graphql.NewList(usersType),
-	Description: string(ConstructorI18N()().T("en-US", "graphQL.User.Description")),
+	Description: string(ConstructorI18N().Scope("graphQL").T("en-US", "User.Description")),
 	Args: graphql.FieldConfigArgument{
 		"id": &graphql.ArgumentConfig{
 			Type: graphql.String,
