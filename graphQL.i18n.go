@@ -1,7 +1,6 @@
 package ethereal
 
 import (
-	"fmt"
 	"github.com/qor/i18n"
 	"strings"
 )
@@ -41,6 +40,7 @@ func mapLanguage() map[string]string {
 	}
 }
 
+// temp functions determines type locale
 func parserLocale(header []string) string {
 	splitSign := strings.Split(header[0], ";")
 	for _, multiLocal := range splitSign {
@@ -51,4 +51,5 @@ func parserLocale(header []string) string {
 			}
 		}
 	}
+	return ""
 }

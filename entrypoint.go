@@ -16,8 +16,9 @@ import (
 var app App
 
 type App struct {
-	Db   *gorm.DB
-	I18n *i18n.I18n
+	Db     *gorm.DB
+	I18n   *i18n.I18n
+	Locale string // type localization, example(ru-RU, en-US)
 }
 
 // root mutation
