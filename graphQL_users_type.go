@@ -1,9 +1,9 @@
 package ethereal
 
 import (
+	"fmt"
 	"github.com/graphql-go/graphql"
 	"strconv"
-	"fmt"
 )
 
 /**
@@ -42,7 +42,7 @@ var UserField = graphql.Field{
 	Resolve: func(params graphql.ResolveParams) (interface{}, error) {
 
 		var users []*User
-		var role Role
+
 		app.Db.Find(&users)
 
 		idQuery, isOK := params.Args["id"].(string)
@@ -50,6 +50,7 @@ var UserField = graphql.Field{
 		if isOK {
 			for _, user := range users {
 				if strconv.Itoa(int(user.ID)) == idQuery {
+					var role Role
 					app.Db.Model(&user).Related(&role)
 					user.Role = role
 					return []User{*user}, nil
@@ -58,8 +59,9 @@ var UserField = graphql.Field{
 		}
 
 		for _, user := range users {
+			var role Role
 			app.Db.Model(&user).Related(&role)
-			fmt.Println(user)
+			fmt.Println(role)
 			user.Role = role
 		}
 
