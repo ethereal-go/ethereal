@@ -2,6 +2,7 @@ package ethereal
 
 import (
 	"fmt"
+	"github.com/agoalofalife/ethereal/graphQL"
 	"github.com/graphql-go/graphql"
 	"github.com/graphql-go/handler"
 	"github.com/qor/i18n"
@@ -11,45 +12,6 @@ import (
 	"runtime"
 	"strconv"
 )
-
-var roleType = graphql.NewObject(graphql.ObjectConfig{
-	Name: "Role",
-	Fields: graphql.Fields{
-		"id": &graphql.Field{
-			Type: graphql.String,
-		},
-		"name": &graphql.Field{
-			Type: graphql.String,
-		},
-		"display_name": &graphql.Field{
-			Type: graphql.String,
-		},
-		"description": &graphql.Field{
-			Type: graphql.String,
-		},
-	},
-})
-
-var usersType = graphql.NewObject(graphql.ObjectConfig{
-	Name: "User",
-	Fields: graphql.Fields{
-		"id": &graphql.Field{
-			Type: graphql.String,
-		},
-		"email": &graphql.Field{
-			Type: graphql.String,
-		},
-		"name": &graphql.Field{
-			Type: graphql.String,
-		},
-		"password": &graphql.Field{
-			Type: graphql.String,
-		},
-		"role": &graphql.Field{
-			Type: roleType,
-		},
-	},
-})
 
 // root mutation
 //var rootMutation = graphql.NewObject(graphql.ObjectConfig{
@@ -136,7 +98,7 @@ var rootQuery = graphql.NewObject(graphql.ObjectConfig{
 	Name: "RootQuery",
 	Fields: graphql.Fields{
 		"users": &graphql.Field{
-			Type:        graphql.NewList(usersType),
+			Type:        graphql.NewList(graphQL.UsersType),
 			Description: "Get single todo",
 			Args: graphql.FieldConfigArgument{
 				"id": &graphql.ArgumentConfig{
@@ -164,7 +126,7 @@ var rootQuery = graphql.NewObject(graphql.ObjectConfig{
 			},
 		},
 		"role": &graphql.Field{
-			Type:        graphql.NewList(roleType),
+			Type:        graphql.NewList(graphQL.RoleType),
 			Description: "Get single todo",
 			Args: graphql.FieldConfigArgument{
 				"id": &graphql.ArgumentConfig{
