@@ -171,8 +171,9 @@ var rootQuery = graphql.NewObject(graphql.ObjectConfig{
 				if isOK {
 					for _, user := range users {
 						if strconv.Itoa(int(user.ID)) == idQuery {
-							app.Db.Model(&user).Related(&role, "Role")
-							fmt.Println(user.Role, "Role")
+							app.Db.Model(&user).Related(&role)
+							user.Role = role
+							fmt.Println(user)
 							return []User{user}, nil
 						}
 					}
