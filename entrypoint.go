@@ -10,7 +10,6 @@ import (
 	"net/http"
 	"path"
 	"runtime"
-	"strconv"
 )
 
 // root mutation
@@ -97,58 +96,8 @@ import (
 var rootQuery = graphql.NewObject(graphql.ObjectConfig{
 	Name: "RootQuery",
 	Fields: graphql.Fields{
-		"users": &graphql.Field{
-			Type:        graphql.NewList(graphQL.UsersType),
-			Description: "Get single todo",
-			Args: graphql.FieldConfigArgument{
-				"id": &graphql.ArgumentConfig{
-					Type: graphql.String,
-				},
-			},
-			Resolve: func(params graphql.ResolveParams) (interface{}, error) {
-				var users []User
-				var role Role
-				app.Db.Find(&users)
-
-				idQuery, isOK := params.Args["id"].(string)
-
-				if isOK {
-					for _, user := range users {
-						if strconv.Itoa(int(user.ID)) == idQuery {
-							app.Db.Model(&user).Related(&role)
-							user.Role = role
-							fmt.Println(user.Role)
-							return []User{user}, nil
-						}
-					}
-				}
-				return users, nil
-			},
-		},
-		"role": &graphql.Field{
-			Type:        graphql.NewList(graphQL.RoleType),
-			Description: "Get single todo",
-			Args: graphql.FieldConfigArgument{
-				"id": &graphql.ArgumentConfig{
-					Type: graphql.String,
-				},
-			},
-			Resolve: func(params graphql.ResolveParams) (interface{}, error) {
-				var roles []Role
-				app.Db.Find(&roles)
-
-				idQuery, isOK := params.Args["id"].(string)
-				if isOK {
-					for _, role := range roles {
-						if string(role.ID) == idQuery {
-							return role, nil
-						}
-					}
-				}
-
-				return roles, nil
-			},
-		},
+		"users": &graphQL.UserField,
+		"role":  &graphQL.RoleField,
 	},
 })
 
@@ -164,7 +113,7 @@ func Start() {
 	I18n := i18n.New(
 		database.New(db),
 	)
-	app = App{Db: Database(), I18n: I18n}
+	A = App{Db: Database(), I18n: I18n}
 	//http.HandleFunc("/graphql", func(w http.ResponseWriter, r *http.Request) {
 	//	result := executeQuery(r.URL.Query().Get("query"), schema)
 	//	json.NewEncoder(w).Encode(result)

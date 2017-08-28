@@ -16,7 +16,7 @@ type App struct {
 	I18n *i18n.I18n
 }
 
-var app App
+var A App
 
 func Run() {
 	envLoading()
@@ -24,7 +24,7 @@ func Run() {
 	I18n := i18n.New(
 		database.New(db),
 	)
-	app = App{Db: Database(), I18n: I18n}
+	A = App{Db: Database(), I18n: I18n}
 
 	SeedI18N()
 	if len(os.Args) > 1 {
