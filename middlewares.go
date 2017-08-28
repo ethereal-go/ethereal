@@ -1,8 +1,6 @@
 package ethereal
 
 import (
-	"github.com/qor/i18n"
-	"log"
 	"net/http"
 )
 

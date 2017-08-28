@@ -32,7 +32,7 @@ var usersType = graphql.NewObject(graphql.ObjectConfig{
 
 var UserField = graphql.Field{
 	Type:        graphql.NewList(usersType),
-	Description: "Get single todo",
+	Description: string(ConstructorI18N()().T("en-US", "graphQL.User.Description")),
 	Args: graphql.FieldConfigArgument{
 		"id": &graphql.ArgumentConfig{
 			Type: graphql.String,
@@ -41,7 +41,6 @@ var UserField = graphql.Field{
 	Resolve: func(params graphql.ResolveParams) (interface{}, error) {
 
 		var users []*User
-
 		app.Db.Find(&users)
 
 		idQuery, isOK := params.Args["id"].(string)

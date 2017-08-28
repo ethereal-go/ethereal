@@ -116,14 +116,36 @@ var schema, _ = graphql.NewSchema(graphql.SchemaConfig{
 	//Mutation: rootMutation,
 })
 
+func ConstructorDb() func() *gorm.DB {
+	var db *gorm.DB
+	return func() *gorm.DB {
+		if db == nil {
+			envLoading()
+			db = Database()
+		}
+		return db
+	}
+}
+func ConstructorI18N() func() *i18n.I18n {
+	var i18 *i18n.I18n
+	return func() *i18n.I18n {
+		fmt.Println(i18 == nil )
+		if i18 == nil {
+			i18 = i18n.New(
+				database.New(ConstructorDb()()),
+			)
+		}
+		return i18
+	}
+}
 func Start() {
-	envLoading()
-	db := Database()
-	I18n := i18n.New(
-		database.New(db),
-	)
+	//envLoading()
+	//db := Database()
+	//I18n := i18n.New(
+	//	database.New(db),
+	//)
 
-	app = App{Db: Database(), I18n: I18n}
+	app = App{Db: ConstructorDb()(), I18n: ConstructorI18N()()}
 	SeedI18N()
 	if len(os.Args) > 1 {
 		CliRun()
@@ -139,7 +161,6 @@ func Start() {
 		http.Handle("/graphql", middlewareLocal(h))
 		// Serve static files
 		_, filename, _, _ := runtime.Caller(0)
-		//fmt.Println(path.Dir(filename))
 		fs := http.FileServer(http.Dir(path.Dir(filename) + "/static"))
 		http.Handle("/", fs)
 		fmt.Println("Now server is running on port 8080")
