@@ -2,7 +2,6 @@ package ethereal
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/jinzhu/gorm"
 	"github.com/joho/godotenv"
 	"github.com/qor/i18n"
 	"github.com/qor/i18n/backends/database"
@@ -11,12 +10,10 @@ import (
 	"os"
 )
 
-type App struct {
-	Db   *gorm.DB
-	I18n *i18n.I18n
-}
-
-var A App
+//type App struct {
+//	Db   *gorm.DB
+//	I18n *i18n.I18n
+//}
 
 func Run() {
 	envLoading()
@@ -24,7 +21,7 @@ func Run() {
 	I18n := i18n.New(
 		database.New(db),
 	)
-	A = App{Db: Database(), I18n: I18n}
+	app = App{Db: Database(), I18n: I18n}
 
 	SeedI18N()
 	if len(os.Args) > 1 {

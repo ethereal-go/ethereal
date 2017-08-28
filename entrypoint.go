@@ -2,15 +2,22 @@ package ethereal
 
 import (
 	"fmt"
-	"github.com/agoalofalife/ethereal/graphQL"
 	"github.com/graphql-go/graphql"
 	"github.com/graphql-go/handler"
+	"github.com/jinzhu/gorm"
 	"github.com/qor/i18n"
 	"github.com/qor/i18n/backends/database"
 	"net/http"
 	"path"
 	"runtime"
 )
+
+var app App
+
+type App struct {
+	Db   *gorm.DB
+	I18n *i18n.I18n
+}
 
 // root mutation
 //var rootMutation = graphql.NewObject(graphql.ObjectConfig{
@@ -96,8 +103,8 @@ import (
 var rootQuery = graphql.NewObject(graphql.ObjectConfig{
 	Name: "RootQuery",
 	Fields: graphql.Fields{
-		"users": &graphQL.UserField,
-		"role":  &graphQL.RoleField,
+		"users": &UserField,
+		"role":  &RoleField,
 	},
 })
 
@@ -113,7 +120,8 @@ func Start() {
 	I18n := i18n.New(
 		database.New(db),
 	)
-	A = App{Db: Database(), I18n: I18n}
+
+	app = App{Db: Database(), I18n: I18n}
 	//http.HandleFunc("/graphql", func(w http.ResponseWriter, r *http.Request) {
 	//	result := executeQuery(r.URL.Query().Get("query"), schema)
 	//	json.NewEncoder(w).Encode(result)

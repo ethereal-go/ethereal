@@ -1,7 +1,6 @@
-package graphQL
+package ethereal
 
 import (
-	"github.com/agoalofalife/ethereal"
 	"github.com/graphql-go/graphql"
 )
 
@@ -32,8 +31,8 @@ var RoleField = graphql.Field{
 		},
 	},
 	Resolve: func(params graphql.ResolveParams) (interface{}, error) {
-		var roles []ethereal.Role
-		ethereal.A.Db.Find(&roles)
+		var roles []Role
+		app.Db.Find(&roles)
 
 		idQuery, isOK := params.Args["id"].(string)
 		if isOK {
