@@ -6,30 +6,11 @@ import (
 	"github.com/graphql-go/handler"
 	"github.com/qor/i18n"
 	"github.com/qor/i18n/backends/database"
-	"math/rand"
 	"net/http"
 	"path"
 	"runtime"
 	"strconv"
-	"time"
 )
-
-type Todo struct {
-	ID   string `json:"id"`
-	Text string `json:"text"`
-	Done bool   `json:"done"`
-}
-
-var TodoList []Todo
-
-func init() {
-	todo1 := Todo{ID: "a", Text: "A todo not to forget", Done: false}
-	todo2 := Todo{ID: "b", Text: "This is the most important", Done: false}
-	todo3 := Todo{ID: "c", Text: "Please do this or else", Done: false}
-	TodoList = append(TodoList, todo1, todo2, todo3)
-
-	rand.Seed(time.Now().UnixNano())
-}
 
 var roleType = graphql.NewObject(graphql.ObjectConfig{
 	Name: "Role",
@@ -48,6 +29,7 @@ var roleType = graphql.NewObject(graphql.ObjectConfig{
 		},
 	},
 })
+
 var usersType = graphql.NewObject(graphql.ObjectConfig{
 	Name: "User",
 	Fields: graphql.Fields{
@@ -63,7 +45,7 @@ var usersType = graphql.NewObject(graphql.ObjectConfig{
 		"password": &graphql.Field{
 			Type: graphql.String,
 		},
-		"roles": &graphql.Field{
+		"role": &graphql.Field{
 			Type: roleType,
 		},
 	},
@@ -173,16 +155,15 @@ var rootQuery = graphql.NewObject(graphql.ObjectConfig{
 						if strconv.Itoa(int(user.ID)) == idQuery {
 							app.Db.Model(&user).Related(&role)
 							user.Role = role
-							fmt.Println(user)
+							fmt.Println(user.Role)
 							return []User{user}, nil
 						}
 					}
 				}
-
 				return users, nil
 			},
 		},
-		"roles": &graphql.Field{
+		"role": &graphql.Field{
 			Type:        graphql.NewList(roleType),
 			Description: "Get single todo",
 			Args: graphql.FieldConfigArgument{
@@ -215,17 +196,6 @@ var schema, _ = graphql.NewSchema(graphql.SchemaConfig{
 	//Mutation: rootMutation,
 })
 
-func executeQuery(query string, schema graphql.Schema) *graphql.Result {
-	result := graphql.Do(graphql.Params{
-		Schema:        schema,
-		RequestString: query,
-	})
-	if len(result.Errors) > 0 {
-		fmt.Printf("wrong result, unexpected errors: %v", result.Errors)
-	}
-	return result
-}
-
 func Start() {
 	envLoading()
 	db := Database()
@@ -251,7 +221,6 @@ func Start() {
 
 	//fmt.Println("Create new todo: curl -g 'http://localhost:8080/graphql?query=mutation+_{createTodo(text:\"My+new+todo\"){id,text,done}}'")
 	//fmt.Println("Update todo: curl -g 'http://localhost:8080/graphql?query=mutation+_{updateTodo(id:\"a\",done:true){id,text,done}}'")
-	//fmt.Println("Access the web app via browser at 'http://localhost:8080'")
 
 	http.ListenAndServe(":8080", nil)
 }
