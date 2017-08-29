@@ -5,16 +5,6 @@ import (
 	"os"
 )
 
-var inputRoleType = graphql.NewInputObject(graphql.InputObjectConfig{
-	Name: "RoleInput",
-	Fields: graphql.InputObjectConfigFieldMap{
-		"id": &graphql.InputObjectFieldConfig{Type: graphql.String},
-		"display_name": &graphql.InputObjectFieldConfig{Type: graphql.String},
-		"name":         &graphql.InputObjectFieldConfig{Type: graphql.String},
-		"description":         &graphql.InputObjectFieldConfig{Type: graphql.String},
-	},
-})
-
 var roleType = graphql.NewObject(graphql.ObjectConfig{
 	Name: "Role",
 	Fields: graphql.Fields{
@@ -36,6 +26,7 @@ var roleType = graphql.NewObject(graphql.ObjectConfig{
 		},
 	},
 })
+
 
 var RoleField = graphql.Field{
 	Type:        graphql.NewList(roleType),

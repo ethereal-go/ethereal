@@ -1,7 +1,9 @@
 package ethereal
 
 import (
+	"github.com/agoalofalife/ethereal/utils"
 	"github.com/graphql-go/graphql"
+	"golang.org/x/crypto/bcrypt"
 	"os"
 	"strconv"
 )
@@ -34,6 +36,43 @@ var usersType = graphql.NewObject(graphql.ObjectConfig{
 		},
 	},
 })
+
+/**
+/ Create User
+*/
+var createUser = graphql.Field{
+	Type:        usersType,
+	Description: "Create new user",
+	Args: graphql.FieldConfigArgument{
+		"name": &graphql.ArgumentConfig{
+			Type: graphql.NewNonNull(graphql.String),
+		},
+		"email": &graphql.ArgumentConfig{
+			Type: graphql.NewNonNull(graphql.String),
+		},
+		"password": &graphql.ArgumentConfig{
+			Type: graphql.NewNonNull(graphql.String),
+		},
+		"role": &graphql.ArgumentConfig{
+			Type: graphql.NewNonNull(graphql.Int),
+		},
+	},
+	Resolve: func(params graphql.ResolveParams) (interface{}, error) {
+		email, _ := params.Args["email"].(string)
+		name, _ := params.Args["name"].(string)
+		password, _ := params.Args["password"].(string)
+
+		hashedPassword, err := utils.HashPassword([]byte(password), bcrypt.DefaultCost)
+		if err != nil {
+			panic(`Error hash password create User service.`)
+		}
+
+		var user = User{Email: email, Name: name, Password: string(hashedPassword)}
+		app.Db.Create(&user)
+
+		return user, nil
+	},
+}
 
 var UserField = graphql.Field{
 	Type:        graphql.NewList(usersType),
