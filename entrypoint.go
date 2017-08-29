@@ -16,9 +16,9 @@ import (
 var app App
 
 type App struct {
-	Db     *gorm.DB
-	I18n   *i18n.I18n
-	Locale string // type localization, example(ru-RU, en-US)
+	Db   *gorm.DB
+	I18n *i18n.I18n
+	//Locale string // type localization, example(ru-RU, en-US)
 }
 
 // root mutation
@@ -139,7 +139,8 @@ func Start() {
 	//I18n := i18n.New(
 	//	database.New(db),
 	//)
-	fmt.Println(string(ConstructorI18N().Scope("graphQL").T("en-US", "User.Description")))
+	fmt.Println(string(ConstructorI18N().Scope("graphQL").T(os.Getenv("LOCALE"), "User.Description")))
+
 	app = App{Db: ConstructorDb(), I18n: ConstructorI18N()}
 	I18nGraphQL().Fill()
 	if len(os.Args) > 1 {
