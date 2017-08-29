@@ -10,27 +10,35 @@ type ErrSeedI18N interface {
 	fill()
 }
 
-// list structure
-type EnUS struct{}
-type RuRU struct{}
-
-func (en EnUS) fill() {
-	app.I18n.SaveTranslation(&i18n.Translation{Key: "graphQL.User.Description", Locale: "en-US", Value: "List of users of your application."})
+type SchemaI18n struct {
+	structure map[string]map[string]string
 }
 
-func (ru RuRU) fill() {
-	app.I18n.SaveTranslation(&i18n.Translation{Key: "graphQL.User.Description", Locale: "ru-RU", Value: "Список пользователей вашего приложения."})
+func graphQL() (graphQL SchemaI18n) {
+	graphQL = SchemaI18n{
+		structure: map[string]map[string]string{
+			"en-US": map[string]string{
+				"graphQL.User.Description": "List of users of your application.",
+			},
+			"ru-RU": map[string]string{
+				"graphQL.User.Description": "Список пользователей вашего приложения.",
+			},
+		},
+	}
+	return
 }
 
-func getTypesLanguage() []ErrSeedI18N {
-	return []ErrSeedI18N{EnUS{}, RuRU{}}
+func (schema SchemaI18n) fill() {
+	for locale, mapValues := range schema.structure {
+		for key, value := range mapValues {
+			app.I18n.SaveTranslation(&i18n.Translation{Key: key, Locale: locale, Value: value})
+		}
+	}
 }
 
 // Fill storage
 func SeedI18N() {
-	for _, typeI18n := range getTypesLanguage() {
-		typeI18n.fill()
-	}
+	graphQL().fill()
 }
 
 func mapLanguage() map[string]string {
