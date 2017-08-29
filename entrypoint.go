@@ -139,9 +139,9 @@ func Start() {
 	//I18n := i18n.New(
 	//	database.New(db),
 	//)
-fmt.Println( string(ConstructorI18N().Scope("graphQL").T("en-US", "User.Description")))
+	fmt.Println(string(ConstructorI18N().Scope("graphQL").T("en-US", "User.Description")))
 	app = App{Db: ConstructorDb(), I18n: ConstructorI18N()}
-	SeedI18N()
+	i18nGraphQL().Fill()
 	if len(os.Args) > 1 {
 		CliRun()
 	} else {

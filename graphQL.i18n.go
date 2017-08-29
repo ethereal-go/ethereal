@@ -5,17 +5,17 @@ import (
 	"strings"
 )
 
-//
-type ErrSeedI18N interface {
-	fill()
+type Locale interface {
+	Fill()
+	Merge()
 }
 
-type SchemaI18n struct {
+type graphQLI18n struct {
 	structure map[string]map[string]string
 }
 
-func graphQL() (graphQL SchemaI18n) {
-	graphQL = SchemaI18n{
+func i18nGraphQL() (graphQL graphQLI18n) {
+	graphQL = graphQLI18n{
 		structure: map[string]map[string]string{
 			"en-US": map[string]string{
 				"graphQL.User.Description": "List of users of your application.",
@@ -28,17 +28,31 @@ func graphQL() (graphQL SchemaI18n) {
 	return
 }
 
-func (schema SchemaI18n) fill() {
+/**
+/ Function merge structure graph i!8n
+*/
+func (schema graphQLI18n) Merge(merge map[string]map[string]string) {
+	for locale, mapValues := range merge {
+		if _, exist := schema.structure[locale]; !exist {
+			for key, value := range mapValues {
+				schema.structure[locale][key] = value
+			}
+		} else {
+			for key, value := range mapValues {
+				if _, exist := schema.structure[locale][key]; !exist {
+					schema.structure[locale][key] = value
+				}
+			}
+		}
+	}
+}
+
+func (schema graphQLI18n) Fill() {
 	for locale, mapValues := range schema.structure {
 		for key, value := range mapValues {
 			app.I18n.SaveTranslation(&i18n.Translation{Key: key, Locale: locale, Value: value})
 		}
 	}
-}
-
-// Fill storage
-func SeedI18N() {
-	graphQL().fill()
 }
 
 func mapLanguage() map[string]string {
