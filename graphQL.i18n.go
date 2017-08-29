@@ -19,19 +19,30 @@ func I18nGraphQL() (graphQL graphQLI18n) {
 		structure: map[string]map[string]string{
 			"en-US": map[string]string{
 				"graphQL.User.Description":  "List of users of your application.",
+				"graphQL.Role.Description":  "List of roles of your application.",
 				"graphQL.UserType.id":       "ID your user.",
 				"graphQL.UserType.email":    "Email your user.",
 				"graphQL.UserType.name":     "Name your user.",
 				"graphQL.UserType.password": "Hashed password your user.",
 				"graphQL.UserType.role":     "Concrete role your user.",
+
+				"graphQL.RoleType.id":           "Id role.",
+				"graphQL.RoleType.name":         "Name role.",
+				"graphQL.RoleType.display_name": "Display name role.",
+				"graphQL.RoleType.description":  "Description role.",
 			},
 			"ru-RU": map[string]string{
-				"graphQL.User.Description": "Список пользователей вашего приложения.",
+				"graphQL.User.Description":  "Список пользователей вашего приложения.",
+				"graphQL.Role.Description":  "Список ролей вашего приложения.",
 				"graphQL.UserType.id":       "ID вашего пользователя.",
 				"graphQL.UserType.email":    "Email вашего пользователя.",
 				"graphQL.UserType.name":     "Имя вашего пользователя.",
 				"graphQL.UserType.password": "Захэшированный пароль",
 				"graphQL.UserType.role":     "Роль которой принадлежить пользователь",
+				"graphQL.RoleType.id":           "Id Роли.",
+				"graphQL.RoleType.name":         "Имя роли.",
+				"graphQL.RoleType.display_name": "Имя роли для отображения.",
+				"graphQL.RoleType.description":  "Подробное описание роли.",
 			},
 		},
 	}
