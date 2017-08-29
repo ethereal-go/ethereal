@@ -23,7 +23,6 @@ func Run() {
 	)
 	app = App{Db: Database(), I18n: I18n}
 
-	SeedI18N()
 	if len(os.Args) > 1 {
 		CliRun()
 	} else {
