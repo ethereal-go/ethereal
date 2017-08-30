@@ -73,16 +73,17 @@ func Start() {
 			Pretty: true,
 		})
 		// here can add middleware
-		http.Handle("/graphql", h)
+		http.Handle("/graphql", middlewareAuthJWT(h))
 
-		http.HandleFunc("/get-token", func(w http.ResponseWriter, r *http.Request) {
+		http.HandleFunc("/login", func(w http.ResponseWriter, r *http.Request) {
 			claims := EtherealClaims{
 				jwt.StandardClaims{
 					ExpiresAt: 15000,
 					Issuer:    "test",
 				},
 			}
-			token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+			// TODO add choose crypt via configuration!
+			token := jwt.NewWithClaims(jwt.SigningMethodPS512, claims)
 
 			tokenString, err := token.SignedString(JWTKEY())
 			fmt.Println(tokenString, err)
@@ -90,7 +91,6 @@ func Start() {
 
 		http.HandleFunc("/parse-token", func(w http.ResponseWriter, r *http.Request) {
 			tokenString := r.URL.Query().Get("token")
-			//tokenString := "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmb28iOiJiYXIiLCJuYmYiOjE0NDQ0Nzg0MDB9.nKqRzljFfJKlotnxH8auq7ui3jlIZVxI16VZQ0G0yVY"
 			token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
 				return JWTKEY(), nil
 			})
