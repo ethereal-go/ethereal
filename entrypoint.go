@@ -46,14 +46,6 @@ var schema, _ = graphql.NewSchema(graphql.SchemaConfig{
 	Mutation: rootMutation,
 })
 
-func ConstructorDb() *gorm.DB {
-	if app.Db == nil {
-		envLoading()
-		app.Db = Database()
-	}
-	return app.Db
-
-}
 // yet
 func ConstructorI18N() *i18n.I18n {
 	if app.I18n == nil {
@@ -82,6 +74,9 @@ func Start() {
 		// here can add middleware
 		http.Handle("/graphql", h)
 
+		http.HandleFunc("get-token", func(w http.ResponseWriter, r *http.Request){
+
+		})
 		// Serve static files
 		_, filename, _, _ := runtime.Caller(0)
 		fs := http.FileServer(http.Dir(path.Dir(filename) + "/static"))

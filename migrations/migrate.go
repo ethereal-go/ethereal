@@ -6,5 +6,6 @@ import (
 
 func Run() {
 	db := ethereal.Database()
-	db.AutoMigrate(&ethereal.Todo{})
+	db.AutoMigrate(&ethereal.User{})
+	db.AutoMigrate(&ethereal.Role{})
 }
