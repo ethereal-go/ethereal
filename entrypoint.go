@@ -54,6 +54,7 @@ func ConstructorDb() *gorm.DB {
 	return app.Db
 
 }
+// yet
 func ConstructorI18N() *i18n.I18n {
 	if app.I18n == nil {
 		app.I18n = i18n.New(
