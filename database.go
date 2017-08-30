@@ -30,6 +30,7 @@ type User struct {
 	Email    string `json:"email"`
 	Name     string `json:"name"`
 	Password string `json:"password"`
+	Token   string  `json:token`
 	Role     Role   `json:"role"`
 	RoleID   int    `gorm:"index"`
 }

@@ -2,6 +2,7 @@ package ethereal
 
 import (
 	"fmt"
+	"github.com/dgrijalva/jwt-go"
 	"github.com/graphql-go/graphql"
 	"github.com/graphql-go/handler"
 	"github.com/jinzhu/gorm"
@@ -74,9 +75,29 @@ func Start() {
 		// here can add middleware
 		http.Handle("/graphql", h)
 
-		http.HandleFunc("get-token", func(w http.ResponseWriter, r *http.Request){
+		http.HandleFunc("/get-token", func(w http.ResponseWriter, r *http.Request) {
+			claims := EtherealClaims{
+				jwt.StandardClaims{
+					ExpiresAt: 15000,
+					Issuer:    "test",
+				},
+			}
+			token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 
+			tokenString, err := token.SignedString(JWTKEY())
+			fmt.Println(tokenString, err)
 		})
+
+		http.HandleFunc("/parse-token", func(w http.ResponseWriter, r *http.Request) {
+			tokenString := r.URL.Query().Get("token")
+			//tokenString := "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJmb28iOiJiYXIiLCJuYmYiOjE0NDQ0Nzg0MDB9.nKqRzljFfJKlotnxH8auq7ui3jlIZVxI16VZQ0G0yVY"
+			token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
+				return JWTKEY(), nil
+			})
+			handlerErrorToken(token, err)
+			fmt.Println(token.Claims, token.Signature, token.Valid, err)
+		})
+
 		// Serve static files
 		_, filename, _, _ := runtime.Caller(0)
 		fs := http.FileServer(http.Dir(path.Dir(filename) + "/static"))
