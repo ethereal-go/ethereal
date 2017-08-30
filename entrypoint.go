@@ -5,8 +5,10 @@ import (
 	"github.com/graphql-go/graphql"
 	"github.com/graphql-go/handler"
 	"github.com/jinzhu/gorm"
+	"github.com/joho/godotenv"
 	"github.com/qor/i18n"
 	"github.com/qor/i18n/backends/database"
+	"log"
 	"net/http"
 	"os"
 	"path"
@@ -15,6 +17,7 @@ import (
 
 var app App
 
+// Base structure
 type App struct {
 	Db   *gorm.DB
 	I18n *i18n.I18n
@@ -29,7 +32,6 @@ var rootMutation = graphql.NewObject(graphql.ObjectConfig{
 })
 
 // root query
-// we just define a trivial example here, since root query is required.
 var rootQuery = graphql.NewObject(graphql.ObjectConfig{
 	Name: "RootQuery",
 	Fields: graphql.Fields{
@@ -62,14 +64,9 @@ func ConstructorI18N() *i18n.I18n {
 }
 
 func Start() {
-	//envLoading()
-	//db := Database()
-	//I18n := i18n.New(
-	//	database.New(db),
-	//)
-
 	app = App{Db: ConstructorDb(), I18n: ConstructorI18N()}
 	I18nGraphQL().Fill()
+
 	if len(os.Args) > 1 {
 		CliRun()
 	} else {
@@ -81,17 +78,29 @@ func Start() {
 			Schema: &schema,
 			Pretty: true,
 		})
-		http.Handle("/graphql", middlewareLocal(h))
+		// here can add middleware
+		http.Handle("/graphql", h)
+
 		// Serve static files
 		_, filename, _, _ := runtime.Caller(0)
 		fs := http.FileServer(http.Dir(path.Dir(filename) + "/static"))
+
 		http.Handle("/", fs)
-		fmt.Println("Now server is running on port 8080")
 
-		//fmt.Println("Create new todo: curl -g 'http://localhost:8080/graphql?query=mutation+_{createTodo(text:\"My+new+todo\"){id,text,done}}'")
-		//fmt.Println("Update todo: curl -g 'http://localhost:8080/graphql?query=mutation+_{updateTodo(id:\"a\",done:true){id,text,done}}'")
-
-		http.ListenAndServe(":8080", nil)
+		if os.Getenv("SERVER_PORT") == "" {
+			os.Setenv("SERVER_PORT", "8080")
+		}
+		fmt.Println("Now server is running on port " + os.Getenv("SERVER_PORT"))
+		http.ListenAndServe(":"+os.Getenv("SERVER_PORT"), nil)
 	}
+}
 
+/**
+/ Load environment variables
+*/
+func envLoading() {
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatal("Error loading .env file")
+	}
 }

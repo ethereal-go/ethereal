@@ -2,10 +2,8 @@ package ethereal
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/joho/godotenv"
 	"github.com/qor/i18n"
 	"github.com/qor/i18n/backends/database"
-	"log"
 	"net/http"
 	"os"
 )
@@ -38,13 +36,6 @@ func Run() {
 		router.Run()
 	}
 
-}
-
-func envLoading() {
-	err := godotenv.Load()
-	if err != nil {
-		log.Fatal("Error loading .env file")
-	}
 }
 
 func FetchAllUsers(c *gin.Context) {
