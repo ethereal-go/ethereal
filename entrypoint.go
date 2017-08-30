@@ -94,7 +94,6 @@ func Start() {
 			token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
 				return JWTKEY(), nil
 			})
-			handlerErrorToken(token, err)
 			fmt.Println(token.Claims, token.Signature, token.Valid, err)
 		})
 

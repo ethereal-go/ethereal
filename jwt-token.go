@@ -2,8 +2,8 @@ package ethereal
 
 import (
 	"errors"
-	"fmt"
 	"github.com/dgrijalva/jwt-go"
+	"os"
 )
 
 type EtherealClaims struct {
@@ -16,26 +16,24 @@ func JWTKEY() []byte {
 }
 
 // handler check error
-func handlerErrorToken(token *jwt.Token, err error) (result bool, message error) {
-	if token !=nil && token.Valid {
-		return true, errors.New("You look nice today") // TODO add locale
-	} else if ve, ok := err.(*jwt.ValidationError); ok {
+func handlerErrorToken(err error) (message error) {
+	if ve, ok := err.(*jwt.ValidationError); ok {
 		if ve.Errors&jwt.ValidationErrorMalformed != 0 {
-			return false, errors.New("That's not even a token")
+			return errors.New(string(ConstructorI18N().T(os.Getenv("LOCALE"), "jwtToken.ValidationErrorMalformed")))
 		} else if ve.Errors&(jwt.ValidationErrorExpired|jwt.ValidationErrorNotValidYet) != 0 {
 			// Token is either expired or not active yet
-			return false, errors.New("Timing is everything")
+			return errors.New(string(ConstructorI18N().T(os.Getenv("LOCALE"), "jwtToken.ValidationErrorExpired")))
 		} else {
-			return false, errors.New("Couldn't handle this token: " + err.Error())
+			return errors.New(string(ConstructorI18N().T(os.Getenv("LOCALE"), "jwtToken.ErrorBase")) + err.Error())
 		}
 	} else {
-		return false, errors.New("Couldn't handle this token: " + err.Error())
+		return errors.New(string(ConstructorI18N().T(os.Getenv("LOCALE"), "jwtToken.ErrorBase")) + err.Error())
 	}
 	return
 }
 
 func compareToken(tokenString string) (*jwt.Token, error) {
-	return  jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
+	return jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
 		return JWTKEY(), nil
 	})
 }

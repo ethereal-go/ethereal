@@ -30,6 +30,10 @@ func I18nGraphQL() (graphQL graphQLI18n) {
 				"graphQL.RoleType.name":         "Name role.",
 				"graphQL.RoleType.display_name": "Display name role.",
 				"graphQL.RoleType.description":  "Description role.",
+
+				"jwtToken.ValidationErrorMalformed" :"That's not even a token",
+				"jwtToken.ValidationErrorExpired" :"Timing is everything",
+				"jwtToken.ErrorBase" :"Couldn't handle this token ",
 			},
 			"ru-RU": map[string]string{
 				"graphQL.User.Description":  "Список пользователей вашего приложения.",
@@ -39,10 +43,15 @@ func I18nGraphQL() (graphQL graphQLI18n) {
 				"graphQL.UserType.name":     "Имя вашего пользователя.",
 				"graphQL.UserType.password": "Захэшированный пароль",
 				"graphQL.UserType.role":     "Роль которой принадлежить пользователь",
+
 				"graphQL.RoleType.id":           "Id Роли.",
 				"graphQL.RoleType.name":         "Имя роли.",
 				"graphQL.RoleType.display_name": "Имя роли для отображения.",
 				"graphQL.RoleType.description":  "Подробное описание роли.",
+
+				"jwtToken.ValidationErrorMalformed" :"Это не похоже на токен",
+				"jwtToken.ValidationErrorExpired" :"Время истекло",
+				"jwtToken.ErrorBase" :"Не удалось обрабоать этот токен ",
 			},
 		},
 	}

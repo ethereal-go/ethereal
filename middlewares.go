@@ -29,12 +29,8 @@ func middlewareAuthJWT(next http.Handler) http.Handler {
 			if t, err := compareToken(token); err == nil && t.Valid {
 				next.ServeHTTP(w, r)
 			} else {
-				if res, message := handlerErrorToken(t, err); res {
-					next.ServeHTTP(w, r)
-				} else {
-					w.WriteHeader(http.StatusNetworkAuthenticationRequired)
-					fmt.Fprint(w, message.Error())
-				}
+				w.WriteHeader(http.StatusNetworkAuthenticationRequired)
+				fmt.Fprint(w, handlerErrorToken(err).Error())
 				return
 			}
 
