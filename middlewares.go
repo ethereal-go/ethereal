@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net/http"
 	"strings"
+	"github.com/agoalofalife/ethereal/utils"
 )
 
 // middleware set Accept-Language
@@ -23,6 +24,8 @@ func middlewareAuthJWT(next http.Handler) http.Handler {
 
 		// get token
 		if strings.HasPrefix(authHeader, "Bearer") {
+			utils.FuncQueue{}.Start().Then(strings.Replace, "Bearer", "", 1)
+
 			token := strings.Replace(authHeader, "Bearer", "", 1)
 			token = strings.Trim(token, " ")
 

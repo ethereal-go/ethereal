@@ -12,7 +12,7 @@ type EtherealClaims struct {
 
 // get key jwt
 func JWTKEY() []byte {
-	return []byte("AllYourBase")
+	return []byte(os.Getenv("JWT_KEY_HMAC"))
 }
 
 // handler check error

@@ -83,7 +83,7 @@ func Start() {
 				},
 			}
 			// TODO add choose crypt via configuration!
-			token := jwt.NewWithClaims(jwt.SigningMethodPS512, claims)
+			token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 
 			tokenString, err := token.SignedString(JWTKEY())
 			fmt.Println(tokenString, err)
