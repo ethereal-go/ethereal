@@ -6,6 +6,13 @@ import (
 	"strings"
 )
 
+/**
+/ Add middleware in App under certain condition..
+*/
+type AddMiddleware interface {
+	Add()
+}
+
 // middleware set Accept-Language
 func middlewareLocal(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {

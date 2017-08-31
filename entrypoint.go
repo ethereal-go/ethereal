@@ -14,6 +14,7 @@ import (
 	"os"
 	"path"
 	"runtime"
+	"github.com/justinas/alice"
 )
 
 var app App
@@ -22,6 +23,7 @@ var app App
 type App struct {
 	Db   *gorm.DB
 	I18n *i18n.I18n
+	Middleware []alice.Constructor
 }
 
 //root mutation
@@ -73,8 +75,10 @@ func Start() {
 			Schema: &schema,
 			Pretty: true,
 		})
+
+
 		// here can add middleware
-		http.Handle("/graphql", h)
+		http.Handle("/graphql", alice.New(app.Middleware...).Then(h))
 
 		http.HandleFunc("/login", func(w http.ResponseWriter, r *http.Request) {
 			claims := EtherealClaims{
