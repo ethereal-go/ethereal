@@ -61,13 +61,14 @@ var createUser = graphql.Field{
 		email, _ := params.Args["email"].(string)
 		name, _ := params.Args["name"].(string)
 		password, _ := params.Args["password"].(string)
+		role, _ := params.Args["role"].(int)
 
 		hashedPassword, err := utils.HashPassword([]byte(password), bcrypt.DefaultCost)
 		if err != nil {
 			panic(`Error hash password create User service.`)
 		}
 
-		var user = User{Email: email, Name: name, Password: string(hashedPassword)}
+		var user = User{Email: email, Name: name, Password: string(hashedPassword), RoleID:role}
 		app.Db.Create(&user)
 
 		return user, nil
