@@ -11,8 +11,8 @@ var (
 )
 
 type FuncQueue struct {
-	q     map[string]reflect.Value
-	queue map[interface{}][]interface{}
+	q      map[string]reflect.Value
+	queue  map[interface{}][]interface{}
 	source interface{}
 	/**
 	/ example queue
@@ -32,7 +32,7 @@ func (q FuncQueue) start() FuncQueue {
 
 func (q FuncQueue) Source(val interface{}) FuncQueue {
 	q.source = val
-	return  q
+	return q
 }
 
 /**
@@ -53,12 +53,19 @@ func (q FuncQueue) Exec() (res interface{}, err error) {
 		//}
 		in := make([]reflect.Value, len(arguments))
 		for k, param := range arguments {
-			in[k] = reflect.ValueOf(param)
+
+			if param == "source" {
+				in[k] = reflect.ValueOf(q.source)
+			} else {
+				in[k] = reflect.ValueOf(param)
+			}
+
 		}
 		result := operation.(reflect.Value).Call(in)
-		fmt.Println(result, "@@@")
-		return result, err
+		fmt.Println(result[0])
+		q.source = result[0]
 	}
+	//fmt.Println(q.source)
 	return
 }
 func (q FuncQueue) Then(operation interface{}, arguments ...interface{}) FuncQueue {
