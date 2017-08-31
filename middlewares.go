@@ -24,9 +24,15 @@ type Middleware struct {
 
 func ConstructorMiddleware() *Middleware {
 	if app.Middleware == nil {
-		app.Middleware = &Middleware{}
+		app.Middleware = &Middleware{allMiddleware: []AddMiddleware{
+			// list standard
+			middlewareJWTToken{},
+		}}
 	}
 	return app.Middleware
+}
+func (m Middleware) AddMiddleware(middleware ...AddMiddleware) {
+	m.allMiddleware = append(m.allMiddleware, middleware...)
 }
 
 // Method loading middleware for application
@@ -37,9 +43,9 @@ func (m Middleware) LoadApplication() []alice.Constructor {
 	return m.includeMiddleware
 }
 
-type middlewareJWTToken string
+type middlewareJWTToken struct{}
 
-func (m middlewareJWTToken) Add(where []alice.Constructor) {
+func (m middlewareJWTToken) Add(where *[]alice.Constructor) {
 	if os.Getenv("AUTH_JWT_TOKEN") != "" && os.Getenv("AUTH_JWT_TOKEN") == "true" {
 		where = append(where, func(handler http.Handler) http.Handler {
 			// To add the ability to select the type of authenticate
@@ -52,7 +58,7 @@ func (m middlewareJWTToken) Add(where []alice.Constructor) {
 					token = strings.Trim(token, " ")
 
 					if t, err := compareToken(token); err == nil && t.Valid {
-						next.ServeHTTP(w, r)
+						//next.ServeHTTP(w, r)
 					} else {
 						w.WriteHeader(http.StatusNetworkAuthenticationRequired)
 						fmt.Fprint(w, handlerErrorToken(err).Error())

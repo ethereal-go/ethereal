@@ -62,6 +62,7 @@ func ConstructorI18N() *i18n.I18n {
 
 func Start() {
 	app = App{Db: ConstructorDb(), I18n: ConstructorI18N(), Middleware: ConstructorMiddleware()}
+	app.Middleware.LoadApplication()
 	I18nGraphQL().Fill()
 
 	if len(os.Args) > 1 {
