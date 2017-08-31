@@ -29,6 +29,7 @@ func ConstructorMiddleware() *Middleware {
 			middlewareJWTToken{},
 		}}
 	}
+
 	return app.Middleware
 }
 func (m Middleware) AddMiddleware(middleware ...AddMiddleware) {
@@ -36,7 +37,7 @@ func (m Middleware) AddMiddleware(middleware ...AddMiddleware) {
 }
 
 // Method loading middleware for application
-func (m Middleware) LoadApplication() []alice.Constructor {
+func (m *Middleware) LoadApplication() []alice.Constructor {
 	for _, middleware := range m.allMiddleware {
 		middleware.Add(&m.includeMiddleware)
 	}
@@ -47,7 +48,7 @@ type middlewareJWTToken struct{}
 
 func (m middlewareJWTToken) Add(where *[]alice.Constructor) {
 	if os.Getenv("AUTH_JWT_TOKEN") != "" && os.Getenv("AUTH_JWT_TOKEN") == "true" {
-		where = append(where, func(handler http.Handler) http.Handler {
+		*where = append(*where, func(handler http.Handler) http.Handler {
 			// To add the ability to select the type of authenticate
 			return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 				authHeader := r.Header.Get("Authorization")
@@ -57,9 +58,7 @@ func (m middlewareJWTToken) Add(where *[]alice.Constructor) {
 					token := strings.Replace(authHeader, "Bearer", "", 1)
 					token = strings.Trim(token, " ")
 
-					if t, err := compareToken(token); err == nil && t.Valid {
-						//next.ServeHTTP(w, r)
-					} else {
+					if t, err := compareToken(token); err != nil && !t.Valid {
 						w.WriteHeader(http.StatusNetworkAuthenticationRequired)
 						fmt.Fprint(w, handlerErrorToken(err).Error())
 						return
@@ -75,6 +74,8 @@ func (m middlewareJWTToken) Add(where *[]alice.Constructor) {
 		})
 	}
 }
+
+// ---- waiting for your implementation ------
 
 // middleware set Accept-Language
 func middlewareLocal(next http.Handler) http.Handler {
