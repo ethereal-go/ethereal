@@ -97,11 +97,12 @@ func Start() {
 			fmt.Println(token.Claims, token.Signature, token.Valid, err)
 		})
 
-		// Serve static files
-		_, filename, _, _ := runtime.Caller(0)
-		fs := http.FileServer(http.Dir(path.Dir(filename) + "/static"))
-
-		http.Handle("/", fs)
+		// Serve static files, if variable env debug in true.
+		if os.Getenv("DEBAG") != "" && os.Getenv("DEBAG") == "true" {
+			_, filename, _, _ := runtime.Caller(0)
+			fs := http.FileServer(http.Dir(path.Dir(filename) + "/static"))
+			http.Handle("/", fs)
+		}
 
 		if os.Getenv("SERVER_PORT") == "" {
 			os.Setenv("SERVER_PORT", "8080")
