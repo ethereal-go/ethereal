@@ -7,6 +7,7 @@ import (
 	"github.com/graphql-go/handler"
 	"github.com/jinzhu/gorm"
 	"github.com/joho/godotenv"
+	"github.com/justinas/alice"
 	"github.com/qor/i18n"
 	"github.com/qor/i18n/backends/database"
 	"log"
@@ -14,24 +15,23 @@ import (
 	"os"
 	"path"
 	"runtime"
-	"github.com/justinas/alice"
 )
 
 var app App
 
 // Base structure
 type App struct {
-	Db   *gorm.DB
-	I18n *i18n.I18n
-	Middleware []alice.Constructor
+	Db         *gorm.DB
+	I18n       *i18n.I18n
+	Middleware *Middleware
 }
 
 //root mutation
 var rootMutation = graphql.NewObject(graphql.ObjectConfig{
 	Name: "RootMutation",
 	Fields: graphql.Fields{
-		"createUser": &createUser,
-		"createJWTToken":&createJWTToken,
+		"createUser":     &createUser,
+		"createJWTToken": &createJWTToken,
 	},
 })
 
@@ -61,7 +61,7 @@ func ConstructorI18N() *i18n.I18n {
 }
 
 func Start() {
-	app = App{Db: ConstructorDb(), I18n: ConstructorI18N()}
+	app = App{Db: ConstructorDb(), I18n: ConstructorI18N(), Middleware: ConstructorMiddleware()}
 	I18nGraphQL().Fill()
 
 	if len(os.Args) > 1 {
@@ -76,9 +76,8 @@ func Start() {
 			Pretty: true,
 		})
 
-
 		// here can add middleware
-		http.Handle("/graphql", alice.New(app.Middleware...).Then(h))
+		http.Handle("/graphql", alice.New(app.Middleware.includeMiddleware...).Then(h))
 
 		http.HandleFunc("/login", func(w http.ResponseWriter, r *http.Request) {
 			claims := EtherealClaims{
