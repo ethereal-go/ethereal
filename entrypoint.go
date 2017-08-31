@@ -29,6 +29,7 @@ var rootMutation = graphql.NewObject(graphql.ObjectConfig{
 	Name: "RootMutation",
 	Fields: graphql.Fields{
 		"createUser": &createUser,
+		"createJWTToken":&createJWTToken,
 	},
 })
 
@@ -73,7 +74,7 @@ func Start() {
 			Pretty: true,
 		})
 		// here can add middleware
-		http.Handle("/graphql", middlewareAuthJWT(h))
+		http.Handle("/graphql", h)
 
 		http.HandleFunc("/login", func(w http.ResponseWriter, r *http.Request) {
 			claims := EtherealClaims{
