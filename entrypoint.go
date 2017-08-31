@@ -21,23 +21,24 @@ var app App
 
 // Base structure
 type App struct {
-	Db         *gorm.DB
-	I18n       *i18n.I18n
-	Middleware *Middleware
+	Db              *gorm.DB
+	I18n            *i18n.I18n
+	Middleware      *Middleware
+	GraphQlMutation graphql.Fields
+	GraphQlQuery    graphql.Fields
 }
 
 //root mutation
 var rootMutation = graphql.NewObject(graphql.ObjectConfig{
-	Name: "RootMutation",
+	Name:   "RootMutation",
 	Fields: graphql.Fields{
-		"createUser":     &createUser,
-		"createJWTToken": &createJWTToken,
+		"createUser": &createUser,
 	},
 })
 
 // root query
 var rootQuery = graphql.NewObject(graphql.ObjectConfig{
-	Name: "RootQuery",
+	Name:   "RootQuery",
 	Fields: graphql.Fields{
 		"users": &UserField,
 		"role":  &RoleField,
@@ -46,7 +47,7 @@ var rootQuery = graphql.NewObject(graphql.ObjectConfig{
 
 // define schema, with our rootQuery and rootMutation
 var schema, _ = graphql.NewSchema(graphql.SchemaConfig{
-	Query:    rootQuery,
+	Query: rootQuery,
 	Mutation: rootMutation,
 })
 
@@ -61,7 +62,18 @@ func ConstructorI18N() *i18n.I18n {
 }
 
 func Start() {
-	app = App{Db: ConstructorDb(), I18n: ConstructorI18N(), Middleware: ConstructorMiddleware()}
+	app = App{
+		Db:         ConstructorDb(),
+		I18n:       ConstructorI18N(),
+		Middleware: ConstructorMiddleware(),
+		GraphQlQuery: graphql.Fields{
+			"users": &UserField,
+			"role":  &RoleField,
+		},
+		GraphQlMutation: graphql.Fields{
+			"createUser": &createUser,
+		},
+	}
 	app.Middleware.LoadApplication()
 
 	I18nGraphQL().Fill()
@@ -77,12 +89,11 @@ func Start() {
 			Schema: &schema,
 			Pretty: true,
 		})
-		fmt.Println(app.Middleware.includeMiddleware)
 
 		// here can add middleware
 		http.Handle("/graphql", alice.New(app.Middleware.includeMiddleware...).Then(h))
 
-		http.HandleFunc("/login", func(w http.ResponseWriter, r *http.Request) {
+		http.HandleFunc("/auth0/login", func(w http.ResponseWriter, r *http.Request) {
 			claims := EtherealClaims{
 				jwt.StandardClaims{
 					ExpiresAt: 15000,
@@ -94,14 +105,6 @@ func Start() {
 
 			tokenString, err := token.SignedString(JWTKEY())
 			fmt.Println(tokenString, err)
-		})
-
-		http.HandleFunc("/parse-token", func(w http.ResponseWriter, r *http.Request) {
-			tokenString := r.URL.Query().Get("token")
-			token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
-				return JWTKEY(), nil
-			})
-			fmt.Println(token.Claims, token.Signature, token.Valid, err)
 		})
 
 		// Serve static files, if variable env debug in true.

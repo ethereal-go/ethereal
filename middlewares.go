@@ -53,6 +53,8 @@ func (m middlewareJWTToken) Add(where *[]alice.Constructor) {
 			return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 				authHeader := r.Header.Get("Authorization")
 
+				//app.GraphQlMutation["createJWTToken"] = &createJWTToken
+
 				// get token
 				if strings.HasPrefix(authHeader, "Bearer") {
 					token := strings.Replace(authHeader, "Bearer", "", 1)

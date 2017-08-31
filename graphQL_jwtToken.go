@@ -4,7 +4,6 @@ import (
 	"github.com/agoalofalife/ethereal/utils"
 	"github.com/dgrijalva/jwt-go"
 	"github.com/graphql-go/graphql"
-
 	"errors"
 )
 
@@ -66,3 +65,14 @@ var createJWTToken = graphql.Field{
 		}{generateToken}, nil
 	},
 }
+
+var authToken, _ = graphql.NewSchema(graphql.SchemaConfig{
+	Mutation: authMutation,
+})
+
+var authMutation = graphql.NewObject(graphql.ObjectConfig{
+	Name: "AuthMutation",
+	Fields: graphql.Fields{
+		"createJWTToken": &createJWTToken,
+	},
+})
