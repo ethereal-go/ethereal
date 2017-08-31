@@ -9,7 +9,6 @@ import (
 	"github.com/joho/godotenv"
 	"github.com/justinas/alice"
 	"github.com/qor/i18n"
-	"github.com/qor/i18n/backends/database"
 	"log"
 	"net/http"
 	"os"
@@ -21,47 +20,17 @@ var app App
 
 // Base structure
 type App struct {
-	Db              *gorm.DB
+	// library gorm for work datqbase
+	Db *gorm.DB
+	// localization application
 	I18n            *i18n.I18n
 	Middleware      *Middleware
 	GraphQlMutation graphql.Fields
 	GraphQlQuery    graphql.Fields
 }
 
-//root mutation
-var rootMutation = graphql.NewObject(graphql.ObjectConfig{
-	Name:   "RootMutation",
-	Fields: graphql.Fields{
-		"createUser": &createUser,
-	},
-})
-
-// root query
-var rootQuery = graphql.NewObject(graphql.ObjectConfig{
-	Name:   "RootQuery",
-	Fields: graphql.Fields{
-		"users": &UserField,
-		"role":  &RoleField,
-	},
-})
-
-// define schema, with our rootQuery and rootMutation
-var schema, _ = graphql.NewSchema(graphql.SchemaConfig{
-	Query: rootQuery,
-	Mutation: rootMutation,
-})
-
-// yet
-func ConstructorI18N() *i18n.I18n {
-	if app.I18n == nil {
-		app.I18n = i18n.New(
-			database.New(ConstructorDb()),
-		)
-	}
-	return app.I18n
-}
-
 func Start() {
+
 	app = App{
 		Db:         ConstructorDb(),
 		I18n:       ConstructorI18N(),
@@ -74,17 +43,33 @@ func Start() {
 			"createUser": &createUser,
 		},
 	}
+
 	app.Middleware.LoadApplication()
+
+	//root mutation
+	var rootMutation = graphql.NewObject(graphql.ObjectConfig{
+		Name:   "RootMutation",
+		Fields: app.GraphQlMutation,
+	})
+
+	// root query
+	var rootQuery = graphql.NewObject(graphql.ObjectConfig{
+		Name:   "RootQuery",
+		Fields: app.GraphQlQuery,
+	})
+
+	// define schema, with our rootQuery and rootMutation
+	var schema, _ = graphql.NewSchema(graphql.SchemaConfig{
+		Query:    rootQuery,
+		Mutation: rootMutation,
+	})
+
 
 	I18nGraphQL().Fill()
 
 	if len(os.Args) > 1 {
 		CliRun()
 	} else {
-		//http.HandleFunc("/graphql", func(w http.ResponseWriter, r *http.Request) {
-		//	result := executeQuery(r.URL.Query().Get("query"), schema)
-		//	json.NewEncoder(w).Encode(result)
-		//})
 		h := handler.New(&handler.Config{
 			Schema: &schema,
 			Pretty: true,

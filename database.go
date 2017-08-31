@@ -16,15 +16,6 @@ func Database() *gorm.DB {
 	return db
 }
 
-func ConstructorDb() *gorm.DB {
-	if app.Db == nil {
-		envLoading()
-		app.Db = Database()
-	}
-	return app.Db
-
-}
-
 type User struct {
 	gorm.Model
 	Email    string `json:"email";gorm:"type:unique_index"`

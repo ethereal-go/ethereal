@@ -22,16 +22,6 @@ type Middleware struct {
 	includeMiddleware []alice.Constructor
 }
 
-func ConstructorMiddleware() *Middleware {
-	if app.Middleware == nil {
-		app.Middleware = &Middleware{allMiddleware: []AddMiddleware{
-			// list standard
-			middlewareJWTToken{},
-		}}
-	}
-
-	return app.Middleware
-}
 func (m Middleware) AddMiddleware(middleware ...AddMiddleware) {
 	m.allMiddleware = append(m.allMiddleware, middleware...)
 }
@@ -52,8 +42,6 @@ func (m middlewareJWTToken) Add(where *[]alice.Constructor) {
 			// To add the ability to select the type of authenticate
 			return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 				authHeader := r.Header.Get("Authorization")
-
-				//app.GraphQlMutation["createJWTToken"] = &createJWTToken
 
 				// get token
 				if strings.HasPrefix(authHeader, "Bearer") {
