@@ -12,12 +12,12 @@ func CliRun() {
 
 	switch *database {
 	case "migrate":
-		app.Db.AutoMigrate(tables()...)
+		App.Db.AutoMigrate(tables()...)
 	case "rollback":
-		app.Db.DropTable(tables()...)
+		App.Db.DropTable(tables()...)
 	case "refresh":
-		app.Db.DropTable(tables()...)
-		app.Db.AutoMigrate(tables()...)
+		App.Db.DropTable(tables()...)
+		App.Db.AutoMigrate(tables()...)
 	default:
 		log.Println(`This value is not set.`)
 	}
@@ -26,7 +26,7 @@ func CliRun() {
 	case "up":
 		role := Role{Name: "User", DisplayName: "User", Description: "Simple user"}
 		user := User{Email: "", Name: "", Password: "", Role: role}
-		app.Db.Save(&user)
+		App.Db.Save(&user)
 	}
 }
 

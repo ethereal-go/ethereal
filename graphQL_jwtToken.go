@@ -42,7 +42,7 @@ var createJWTToken = graphql.Field{
 		login, _ := params.Args["login"].(string)
 		password, _ := params.Args["password"].(string)
 
-		app.Db.Where("email = ?", login).First(&user)
+		App.Db.Where("email = ?", login).First(&user)
 
 		if utils.CompareHashPassword([]byte(user.Password), []byte(password)) {
 			claims := EtherealClaims{

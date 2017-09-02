@@ -1,56 +1,47 @@
 package ethereal
 
 import (
-	"github.com/graphql-go/graphql"
 	"github.com/jinzhu/gorm"
 	"github.com/qor/i18n"
 	"github.com/qor/i18n/backends/database"
+	//"fmt"
 )
 
 // Here all constructors application, which return some structure...
 
 func ConstructorI18N() *i18n.I18n {
-	if app.I18n == nil {
-		app.I18n = i18n.New(
+	//fmt.Println(app)
+	if App.I18n == nil {
+		App.I18n = i18n.New(
 			database.New(ConstructorDb()),
 		)
 	}
-	return app.I18n
+	return App.I18n
 }
 
 func ConstructorDb() *gorm.DB {
-	if app.Db == nil {
+	if App.Db == nil {
 		envLoading()
-		app.Db = Database()
+		App.Db = Database()
 	}
-	return app.Db
+	return App.Db
 
 }
 
 func ConstructorMiddleware() *Middleware {
-	if app.Middleware == nil {
-		app.Middleware = &Middleware{allMiddleware: []AddMiddleware{
+	if App.Middleware == nil {
+		App.Middleware = &Middleware{allMiddleware: []AddMiddleware{
 			// list standard
 			middlewareJWTToken{},
 		}}
 	}
-	return app.Middleware
+	return App.Middleware
 }
 
-func ConstructorApp() *App {
-	if app == nil {
-		app = &App{
-			Db:         ConstructorDb(),
-			I18n:       ConstructorI18N(),
-			Middleware: ConstructorMiddleware(),
-			GraphQlQuery: graphql.Fields{
-				"users": &UserField,
-				"role":  &RoleField,
-			},
-			GraphQlMutation: graphql.Fields{
-				"createUser": &createUser,
-			},
-		}
-	}
-	return app
+func Mutations() GraphQlMutations {
+	return mutations
+}
+
+func Queries() GraphQlQueries {
+	return queries
 }

@@ -79,7 +79,7 @@ func (schema graphQLI18n) Merge(merge map[string]map[string]string) graphQLI18n 
 func (schema graphQLI18n) Fill() {
 	for locale, mapValues := range schema.structure {
 		for key, value := range mapValues {
-			app.I18n.SaveTranslation(&i18n.Translation{Key: key, Locale: locale, Value: value})
+			App.I18n.SaveTranslation(&i18n.Translation{Key: key, Locale: locale, Value: value})
 		}
 	}
 }

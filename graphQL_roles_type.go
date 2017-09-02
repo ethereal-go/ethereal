@@ -38,7 +38,7 @@ var RoleField = graphql.Field{
 	},
 	Resolve: func(params graphql.ResolveParams) (interface{}, error) {
 		var roles []Role
-		app.Db.Find(&roles)
+		App.Db.Find(&roles)
 
 		idQuery, isOK := params.Args["id"].(string)
 		if isOK {

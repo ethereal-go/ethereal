@@ -69,7 +69,7 @@ var createUser = graphql.Field{
 		}
 
 		var user = User{Email: email, Name: name, Password: string(hashedPassword), RoleID:role}
-		app.Db.Create(&user)
+		App.Db.Create(&user)
 
 		return user, nil
 	},
@@ -86,7 +86,7 @@ var UserField = graphql.Field{
 	Resolve: func(params graphql.ResolveParams) (interface{}, error) {
 
 		var users []*User
-		app.Db.Find(&users)
+		App.Db.Find(&users)
 
 		idQuery, isOK := params.Args["id"].(string)
 
@@ -94,7 +94,7 @@ var UserField = graphql.Field{
 			for _, user := range users {
 				if strconv.Itoa(int(user.ID)) == idQuery {
 					var role Role
-					app.Db.Model(&user).Related(&role)
+					App.Db.Model(&user).Related(&role)
 					user.Role = role
 					return []User{*user}, nil
 				}
@@ -103,7 +103,7 @@ var UserField = graphql.Field{
 
 		for _, user := range users {
 			var role Role
-			app.Db.Model(&user).Related(&role)
+			App.Db.Model(&user).Related(&role)
 			user.Role = role
 		}
 

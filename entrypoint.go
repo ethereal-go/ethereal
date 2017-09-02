@@ -16,10 +16,31 @@ import (
 	"runtime"
 )
 
-var app *App
+var App Application
+var mutations map[string]*graphql.Field
+var queries GraphQlQueries
 
+type GraphQlMutations map[string]*graphql.Field
+type GraphQlQueries map[string]*graphql.Field
+
+func (g GraphQlMutations) Add(name string, field *graphql.Field) GraphQlMutations{
+	mutations[name] = field
+	return g
+}
+
+func (g GraphQlQueries) Add(name string, field *graphql.Field) {
+	queries[name] = field
+}
+
+func startMutations() GraphQlMutations {
+	 mutations = map[string]*graphql.Field{
+		"users": &UserField,
+		"role":  &RoleField,
+	}
+
+}
 // Base structure
-type App struct {
+type Application struct {
 	// library gorm for work database
 	Db *gorm.DB
 	// localization application
@@ -34,20 +55,32 @@ func Start() {
 	// - cli console
 	// - api server
 	// Secondly, we must determine the sequence of actions
-	ConstructorApp()
 
-	app.Middleware.LoadApplication()
+	App = Application{
+		Db:         ConstructorDb(),
+		I18n:       ConstructorI18N(),
+		Middleware: ConstructorMiddleware(),
+		GraphQlQuery: graphql.Fields{
+			"users": &UserField,
+			"role":  &RoleField,
+		},
+		GraphQlMutation: graphql.Fields{
+			"createUser": &createUser,
+		},
+	}
+
+	App.Middleware.LoadApplication()
 
 	//root mutation
 	var rootMutation = graphql.NewObject(graphql.ObjectConfig{
 		Name:   "RootMutation",
-		Fields: app.GraphQlMutation,
+		Fields: App.GraphQlMutation,
 	})
 
 	// root query
 	var rootQuery = graphql.NewObject(graphql.ObjectConfig{
 		Name:   "RootQuery",
-		Fields: app.GraphQlQuery,
+		Fields: App.GraphQlQuery,
 	})
 
 	// define schema, with our rootQuery and rootMutation
@@ -67,7 +100,7 @@ func Start() {
 		})
 
 		// here can add middleware
-		http.Handle("/graphql", alice.New(app.Middleware.includeMiddleware...).Then(h))
+		http.Handle("/graphql", alice.New(App.Middleware.includeMiddleware...).Then(h))
 
 		http.HandleFunc("/auth0/login", func(w http.ResponseWriter, r *http.Request) {
 			claims := EtherealClaims{
