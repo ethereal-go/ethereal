@@ -5,6 +5,7 @@ import (
 	"github.com/qor/i18n"
 	"github.com/qor/i18n/backends/database"
 	//"fmt"
+	"github.com/graphql-go/graphql"
 )
 
 // Here all constructors application, which return some structure...
@@ -40,6 +41,10 @@ func ConstructorMiddleware() *Middleware {
 
 func Mutations() GraphQlMutations {
 	return mutations
+}
+
+func AddMutations(name string, field *graphql.Field) {
+	mutations[name] = field
 }
 
 func Queries() GraphQlQueries {

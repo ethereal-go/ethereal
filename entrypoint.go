@@ -17,13 +17,14 @@ import (
 )
 
 var App Application
-var mutations map[string]*graphql.Field
+var mutations GraphQlMutations
 var queries GraphQlQueries
 
 type GraphQlMutations map[string]*graphql.Field
 type GraphQlQueries map[string]*graphql.Field
 
-func (g GraphQlMutations) Add(name string, field *graphql.Field) GraphQlMutations{
+func (g GraphQlMutations) Add(name string, field *graphql.Field) GraphQlMutations {
+
 	mutations[name] = field
 	return g
 }
@@ -32,13 +33,15 @@ func (g GraphQlQueries) Add(name string, field *graphql.Field) {
 	queries[name] = field
 }
 
-func startMutations() GraphQlMutations {
-	 mutations = map[string]*graphql.Field{
-		"users": &UserField,
-		"role":  &RoleField,
-	}
+//
+//func startMutations() GraphQlMutations {
+//	mutations = map[string]*graphql.Field{
+//		"users": &UserField,
+//		"role":  &RoleField,
+//	}
+//
+//}
 
-}
 // Base structure
 type Application struct {
 	// library gorm for work database
