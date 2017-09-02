@@ -1,6 +1,7 @@
 package ethereal
 
 import (
+	"github.com/graphql-go/graphql"
 	"github.com/jinzhu/gorm"
 	"github.com/qor/i18n"
 	"github.com/qor/i18n/backends/database"
@@ -34,4 +35,22 @@ func ConstructorMiddleware() *Middleware {
 		}}
 	}
 	return app.Middleware
+}
+
+func ConstructorApp() *App {
+	if app == nil {
+		app = &App{
+			Db:         ConstructorDb(),
+			I18n:       ConstructorI18N(),
+			Middleware: ConstructorMiddleware(),
+			GraphQlQuery: graphql.Fields{
+				"users": &UserField,
+				"role":  &RoleField,
+			},
+			GraphQlMutation: graphql.Fields{
+				"createUser": &createUser,
+			},
+		}
+	}
+	return app
 }

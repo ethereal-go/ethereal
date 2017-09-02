@@ -16,11 +16,11 @@ import (
 	"runtime"
 )
 
-var app App
+var app *App
 
 // Base structure
 type App struct {
-	// library gorm for work datqbase
+	// library gorm for work database
 	Db *gorm.DB
 	// localization application
 	I18n            *i18n.I18n
@@ -30,19 +30,11 @@ type App struct {
 }
 
 func Start() {
-
-	app = App{
-		Db:         ConstructorDb(),
-		I18n:       ConstructorI18N(),
-		Middleware: ConstructorMiddleware(),
-		GraphQlQuery: graphql.Fields{
-			"users": &UserField,
-			"role":  &RoleField,
-		},
-		GraphQlMutation: graphql.Fields{
-			"createUser": &createUser,
-		},
-	}
+	// First we have to determine the mode of operation
+	// - cli console
+	// - api server
+	// Secondly, we must determine the sequence of actions
+	ConstructorApp()
 
 	app.Middleware.LoadApplication()
 
@@ -63,7 +55,6 @@ func Start() {
 		Query:    rootQuery,
 		Mutation: rootMutation,
 	})
-
 
 	I18nGraphQL().Fill()
 
