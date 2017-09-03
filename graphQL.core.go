@@ -8,10 +8,6 @@ var queries GraphQlQueries
 type GraphQlMutations map[string]*graphql.Field
 type GraphQlQueries map[string]*graphql.Field
 
-type GraphFields interface {
-	Add(name string, field *graphql.Field) GraphQlMutations
-}
-
 /**
 / Methods add new field (query or mutations) in GraphQl{types}..
 */
