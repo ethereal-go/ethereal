@@ -1,11 +1,10 @@
 package ethereal
 
 import (
+	"github.com/graphql-go/graphql"
 	"github.com/jinzhu/gorm"
 	"github.com/qor/i18n"
 	"github.com/qor/i18n/backends/database"
-	//"fmt"
-	"github.com/graphql-go/graphql"
 )
 
 // Here all constructors application, which return some structure...
@@ -39,14 +38,29 @@ func ConstructorMiddleware() *Middleware {
 	return App.Middleware
 }
 
+//  init mutation global
 func Mutations() GraphQlMutations {
+	if mutations == nil {
+		mutations = make(GraphQlMutations)
+	}
 	return mutations
 }
 
-func AddMutations(name string, field *graphql.Field) {
-	mutations[name] = field
+//  init query global
+func Queries() GraphQlQueries {
+	if queries == nil {
+		queries = make(GraphQlQueries)
+	}
+	return queries
 }
 
-func Queries() GraphQlQueries {
+// Function add default field mutation
+func startMutations() map[string]*graphql.Field {
+	Mutations().Add("createUser", &createUser)
+	return mutations
+}
+
+func startQueries() map[string]*graphql.Field {
+	Queries().Add("users", &UserField).Add("role", &RoleField)
 	return queries
 }

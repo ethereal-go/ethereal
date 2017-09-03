@@ -17,30 +17,6 @@ import (
 )
 
 var App Application
-var mutations GraphQlMutations
-var queries GraphQlQueries
-
-type GraphQlMutations map[string]*graphql.Field
-type GraphQlQueries map[string]*graphql.Field
-
-func (g GraphQlMutations) Add(name string, field *graphql.Field) GraphQlMutations {
-
-	mutations[name] = field
-	return g
-}
-
-func (g GraphQlQueries) Add(name string, field *graphql.Field) {
-	queries[name] = field
-}
-
-//
-//func startMutations() GraphQlMutations {
-//	mutations = map[string]*graphql.Field{
-//		"users": &UserField,
-//		"role":  &RoleField,
-//	}
-//
-//}
 
 // Base structure
 type Application struct {
@@ -58,18 +34,13 @@ func Start() {
 	// - cli console
 	// - api server
 	// Secondly, we must determine the sequence of actions
-
+	fmt.Println(mutations)
 	App = Application{
 		Db:         ConstructorDb(),
 		I18n:       ConstructorI18N(),
 		Middleware: ConstructorMiddleware(),
-		GraphQlQuery: graphql.Fields{
-			"users": &UserField,
-			"role":  &RoleField,
-		},
-		GraphQlMutation: graphql.Fields{
-			"createUser": &createUser,
-		},
+		GraphQlQuery: startQueries(),
+		GraphQlMutation: startMutations(),
 	}
 
 	App.Middleware.LoadApplication()
