@@ -34,7 +34,6 @@ func Start() {
 	// - cli console
 	// - api server
 	// Secondly, we must determine the sequence of actions
-	fmt.Println(mutations)
 	App = Application{
 		Db:         ConstructorDb(),
 		I18n:       ConstructorI18N(),
