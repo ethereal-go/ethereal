@@ -1,7 +1,6 @@
 package ethereal
 
 import (
-	"fmt"
 	"github.com/agoalofalife/ethereal/utils"
 	"github.com/graphql-go/graphql"
 	"golang.org/x/crypto/bcrypt"
@@ -85,7 +84,6 @@ var UserField = graphql.Field{
 		},
 	},
 	Resolve: func(params graphql.ResolveParams) (interface{}, error) {
-
 		//fmt.Println(params.Info.ReturnType.Name() == usersType.Name())
 		var users []*User
 		App.Db.Find(&users)
