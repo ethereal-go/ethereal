@@ -85,6 +85,7 @@ var UserField = graphql.Field{
 		},
 	},
 	Resolve: func(params graphql.ResolveParams) (interface{}, error) {
+		fmt.Println(params.Context.Value("test"))
 		//fmt.Println(params.Info.ReturnType.Name() == usersType.Name())
 		var users []*User
 		App.Db.Find(&users)

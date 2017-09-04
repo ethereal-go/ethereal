@@ -4,16 +4,17 @@ import (
 	"fmt"
 	"github.com/dgrijalva/jwt-go"
 	"github.com/graphql-go/graphql"
-	"github.com/graphql-go/handler"
 	"github.com/jinzhu/gorm"
 	"github.com/joho/godotenv"
-	"github.com/justinas/alice"
 	"github.com/qor/i18n"
 	"log"
 	"net/http"
 	"os"
 	"path"
 	"runtime"
+	"context"
+	"encoding/json"
+	"github.com/graphql-go/handler"
 )
 
 var App Application
@@ -35,10 +36,10 @@ func Start() {
 	// - api server
 	// Secondly, we must determine the sequence of actions
 	App = Application{
-		Db:         ConstructorDb(),
-		I18n:       ConstructorI18N(),
-		Middleware: ConstructorMiddleware(),
-		GraphQlQuery: startQueries(),
+		Db:              ConstructorDb(),
+		I18n:            ConstructorI18N(),
+		Middleware:      ConstructorMiddleware(),
+		GraphQlQuery:    startQueries(),
 		GraphQlMutation: startMutations(),
 	}
 
@@ -67,13 +68,31 @@ func Start() {
 	if len(os.Args) > 1 {
 		CliRun()
 	} else {
-		h := handler.New(&handler.Config{
-			Schema: &schema,
-			Pretty: true,
+		//h := handler.New(&handler.Config{
+		//	Schema: &schema,
+		//	Pretty: true,
+		//})
+		//ctx := context.WithValue(context.Background(), "test", "get from context")
+		//h.ContextHandler(ctx)
+
+		http.HandleFunc("/graphql", func(w http.ResponseWriter, r *http.Request) {
+			opts := handler.NewRequestOptions(r)
+			result := graphql.Do(graphql.Params{
+				Schema: schema,
+				OperationName:opts.OperationName,
+				VariableValues:opts.Variables,
+				RequestString: opts.Query,
+				Context:       context.WithValue(context.Background(), "test", "test from context"),
+			})
+			if len(result.Errors) > 0 {
+				log.Printf("wrong result, unexpected errors: %v", result.Errors)
+				return
+			}
+			json.NewEncoder(w).Encode(result)
 		})
 
 		// here can add middleware
-		http.Handle("/graphql", alice.New(App.Middleware.includeMiddleware...).Then(h))
+		//http.Handle("/graphql", alice.New(App.Middleware.includeMiddleware...).Then(h))
 
 		http.HandleFunc("/auth0/login", func(w http.ResponseWriter, r *http.Request) {
 			claims := EtherealClaims{
