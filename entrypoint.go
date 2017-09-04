@@ -15,6 +15,7 @@ import (
 	"context"
 	"encoding/json"
 	"github.com/graphql-go/handler"
+	"github.com/justinas/alice"
 )
 
 var App Application
@@ -28,6 +29,7 @@ type Application struct {
 	Middleware      *Middleware
 	GraphQlMutation graphql.Fields
 	GraphQlQuery    graphql.Fields
+	Context  context.Context
 }
 
 func Start() {
@@ -41,6 +43,7 @@ func Start() {
 		Middleware:      ConstructorMiddleware(),
 		GraphQlQuery:    startQueries(),
 		GraphQlMutation: startMutations(),
+		Context:context.Background(),
 	}
 
 	App.Middleware.LoadApplication()
@@ -75,7 +78,7 @@ func Start() {
 		//ctx := context.WithValue(context.Background(), "test", "get from context")
 		//h.ContextHandler(ctx)
 
-		http.HandleFunc("/graphql", func(w http.ResponseWriter, r *http.Request) {
+		h := http.HandlerFunc(func (w http.ResponseWriter, r *http.Request) {
 			opts := handler.NewRequestOptions(r)
 			result := graphql.Do(graphql.Params{
 				Schema: schema,
@@ -90,9 +93,10 @@ func Start() {
 			}
 			json.NewEncoder(w).Encode(result)
 		})
-
+		//myHandler := http.HandlerFunc(myApp)
+		//alice.New(App.Middleware.includeMiddleware...).Then(h)
 		// here can add middleware
-		//http.Handle("/graphql", alice.New(App.Middleware.includeMiddleware...).Then(h))
+		http.Handle("/graphql", alice.New(App.Middleware.includeMiddleware...).Then(h))
 
 		http.HandleFunc("/auth0/login", func(w http.ResponseWriter, r *http.Request) {
 			claims := EtherealClaims{
