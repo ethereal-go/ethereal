@@ -1,6 +1,7 @@
 package ethereal
 
 import (
+	"fmt"
 	"github.com/agoalofalife/ethereal/utils"
 	"github.com/graphql-go/graphql"
 	"golang.org/x/crypto/bcrypt"
@@ -68,7 +69,7 @@ var createUser = graphql.Field{
 			panic(`Error hash password create User service.`)
 		}
 
-		var user = User{Email: email, Name: name, Password: string(hashedPassword), RoleID:role}
+		var user = User{Email: email, Name: name, Password: string(hashedPassword), RoleID: role}
 		App.Db.Create(&user)
 
 		return user, nil
@@ -85,6 +86,7 @@ var UserField = graphql.Field{
 	},
 	Resolve: func(params graphql.ResolveParams) (interface{}, error) {
 
+		//fmt.Println(params.Info.ReturnType.Name() == usersType.Name())
 		var users []*User
 		App.Db.Find(&users)
 

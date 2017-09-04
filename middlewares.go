@@ -34,6 +34,9 @@ func (m *Middleware) LoadApplication() []alice.Constructor {
 	return m.includeMiddleware
 }
 
+/**
+/ ability to set jwt token all queries or choose query
+*/
 type middlewareJWTToken struct{}
 
 func (m middlewareJWTToken) Add(where *[]alice.Constructor) {
