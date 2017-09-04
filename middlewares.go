@@ -1,6 +1,7 @@
 package ethereal
 
 import (
+	"context"
 	"fmt"
 	"github.com/justinas/alice"
 	"net/http"
@@ -40,7 +41,7 @@ func (m *Middleware) LoadApplication() []alice.Constructor {
 type middlewareJWTToken struct{}
 
 func (m middlewareJWTToken) Add(where *[]alice.Constructor) {
-
+	context.WithValue(context.Background(), "test", "value")
 	if os.Getenv("AUTH_JWT_TOKEN") != "" && os.Getenv("AUTH_JWT_TOKEN") == "true" {
 		*where = append(*where, func(handler http.Handler) http.Handler {
 			// To add the ability to select the type of authenticate
