@@ -9,11 +9,13 @@ import (
 	"github.com/jinzhu/gorm"
 	"github.com/justinas/alice"
 	"github.com/qor/i18n"
+	"github.com/spf13/viper"
 	"log"
 	"net/http"
 	"os"
 	"path"
 	"runtime"
+	"strings"
 )
 
 var App Application
@@ -32,6 +34,12 @@ type Application struct {
 }
 
 func Start() {
+	// config variables
+	var (
+		debug string
+		host  string
+	)
+
 	// First we have to determine the mode of operation
 	// - cli console
 	// - api server
@@ -113,17 +121,21 @@ func Start() {
 		//	fmt.Println(tokenString, err)
 		//})
 
+		if debug = os.Getenv("GRAPHQL.DEBUG"); debug == "" {
+			debug = viper.GetString(strings.ToLower("GRAPHQL.DEBUG"))
+		}
+		if host = os.Getenv("HOST.PORT"); host == "" {
+			host = viper.GetString(strings.ToLower("HOST.PORT"))
+		}
+
 		// Serve static files, if variable env debug in true.
-		if os.Getenv("DEBAG") != "" && os.Getenv("DEBAG") == "true" {
+		if debug == "true" {
 			_, filename, _, _ := runtime.Caller(0)
 			fs := http.FileServer(http.Dir(path.Dir(filename) + "/static"))
 			http.Handle("/", fs)
 		}
 
-		if os.Getenv("SERVER_PORT") == "" {
-			os.Setenv("SERVER_PORT", "8080")
-		}
-		fmt.Println("Now server is running on port " + os.Getenv("SERVER_PORT"))
-		http.ListenAndServe(":"+os.Getenv("SERVER_PORT"), nil)
+		fmt.Println("Now server is running on port " + host)
+		http.ListenAndServe(":"+host, nil)
 	}
 }

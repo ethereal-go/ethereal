@@ -4,12 +4,30 @@ import (
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
 	"os"
+	"github.com/spf13/viper"
+	"strings"
 )
 
 func Database() *gorm.DB {
-	db, err := gorm.Open("mysql", os.Getenv("MYSQL_LOGIN")+
-		":"+os.Getenv("MYSQL_PASSWORD")+
-		"@/"+os.Getenv("MYSQL_DATABASE")+"?charset=utf8&parseTime=True&loc=Local")
+	var (
+		login string
+		password string
+		database string
+
+	)
+	if login = os.Getenv("DATABASE.LOGIN"); login == "" {
+		login = viper.GetString(strings.ToLower("DATABASE.LOGIN"))
+	}
+	if password = os.Getenv("DATABASE.PASSWORD"); password == "" {
+		password = viper.GetString(strings.ToLower("DATABASE.PASSWORD"))
+	}
+	if database = os.Getenv("DATABASE.NAME"); database == "" {
+		database = viper.GetString(strings.ToLower("DATABASE.NAME"))
+	}
+
+	db, err := gorm.Open("mysql", login+
+		":"+password+
+		"@/"+database+"?charset=utf8&parseTime=True&loc=Local")
 	if err != nil {
 		panic("failed to connect database")
 	}
