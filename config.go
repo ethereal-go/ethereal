@@ -2,14 +2,13 @@ package ethereal
 
 import (
 	"fmt"
+	"github.com/agoalofalife/ethereal/utils"
 	"github.com/joho/godotenv"
 	"github.com/spf13/viper"
-	"log"
 	"os"
 	"path"
 	"path/filepath"
-	"runtime"
-	"github.com/agoalofalife/ethereal/utils"
+	"log"
 )
 
 type Config struct {
@@ -20,28 +19,18 @@ type Config struct {
 // Load configuration data set in application
 func (c Config) LoadConfigFromApp() {
 	var err error
-	_, currentPath, _, _ := runtime.Caller(0)
-	_, pathUser, _, _ := runtime.Caller(1)
-
 	c.fileName = "app.json"
-	c.basePath = path.Dir(currentPath) + "/config/"
 
-	var cpan string
-	if cpan, err = filepath.Abs(filepath.Dir(os.Args[0])); err != nil {
-		panic(err)
-	}
 	workPath, err := os.Getwd()
 	if err != nil {
 		panic(err)
 	}
+	c.basePath = filepath.Join(workPath, "config")
 	appConfigPath := filepath.Join(workPath, "config", "app.json")
 
-	fmt.Println(utils.FileExists(appConfigPath))
-	fmt.Println(cpan)
-
-	//fmt.Println(utils.FileExists(path.Dir(pathUser) + "/" + c.fileName))
-	fmt.Println(pathUser)
-	//fmt.Println(path.Dir(pathUser) + "/" + c.fileName)
+	if !utils.FileExists(path.Dir(appConfigPath)) {
+		panic("Not Found config file.")
+	}
 
 	viper.SetConfigName("app")
 	viper.AddConfigPath(c.basePath)
@@ -49,7 +38,7 @@ func (c Config) LoadConfigFromApp() {
 	err = viper.ReadInConfig() // Find and read the config file
 
 	if err != nil { // Handle errors reading the config file
-		panic(fmt.Errorf("Fatal error config file: %s \n", err))
+		panic(fmt.Errorf("kFatal error config file: %s \n", err))
 	}
 	err = godotenv.Load()
 	if err != nil {
