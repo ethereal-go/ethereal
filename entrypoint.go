@@ -7,10 +7,8 @@ import (
 	"github.com/graphql-go/graphql"
 	"github.com/graphql-go/handler"
 	"github.com/jinzhu/gorm"
-	"github.com/joho/godotenv"
 	"github.com/justinas/alice"
 	"github.com/qor/i18n"
-	"github.com/spf13/viper"
 	"log"
 	"net/http"
 	"os"
@@ -30,7 +28,7 @@ type Application struct {
 	GraphQlMutation graphql.Fields
 	GraphQlQuery    graphql.Fields
 	Context         context.Context
-	Config          Config
+	Config          *Config
 }
 
 func Start() {
@@ -38,6 +36,7 @@ func Start() {
 	// - cli console
 	// - api server
 	// Secondly, we must determine the sequence of actions
+
 	App = Application{
 		Db:              ConstructorDb(),
 		I18n:            ConstructorI18N(),
@@ -45,22 +44,10 @@ func Start() {
 		GraphQlQuery:    startQueries(),
 		GraphQlMutation: startMutations(),
 		Context:         context.Background(),
-		Config:          Config{},
+		Config:          ConstructorConfig(),
 	}
 
 	App.Middleware.LoadApplication(&App.Context)
-	App.Config.LoadConfigFromApp()
-	// Load configuration
-	//_, currentPath, _, _ := runtime.Caller(0)
-	//viper.SetConfigName("app")
-	//viper.AddConfigPath(path.Dir(currentPath) + "/config")
-	//err := viper.ReadInConfig() // Find and read the config file
-	//
-	//if err != nil { // Handle errors reading the config file
-	//	panic(fmt.Errorf("Fatal error config file: %s \n", err))
-	//}
-	//err = viper.ReadInConfig()
-	fmt.Println(viper.AllKeys())
 
 	//root mutation
 	var rootMutation = graphql.NewObject(graphql.ObjectConfig{
@@ -138,15 +125,5 @@ func Start() {
 		}
 		fmt.Println("Now server is running on port " + os.Getenv("SERVER_PORT"))
 		http.ListenAndServe(":"+os.Getenv("SERVER_PORT"), nil)
-	}
-}
-
-/**
-/ Load environment variables
-*/
-func envLoading() {
-	err := godotenv.Load()
-	if err != nil {
-		log.Fatal("Error loading .env file")
 	}
 }

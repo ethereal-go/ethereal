@@ -21,7 +21,7 @@ func ConstructorI18N() *i18n.I18n {
 
 func ConstructorDb() *gorm.DB {
 	if App.Db == nil {
-		envLoading()
+		ConstructorConfig()
 		App.Db = Database()
 	}
 	return App.Db
@@ -36,6 +36,14 @@ func ConstructorMiddleware() *Middleware {
 		}}
 	}
 	return App.Middleware
+}
+
+func ConstructorConfig() *Config {
+	if App.Config == nil {
+		App.Config = &Config{}
+		App.Config.LoadConfigFromApp()
+	}
+	return App.Config
 }
 
 //  init mutation global
