@@ -1,21 +1,21 @@
 package ethereal
 
 import (
+	"context"
+	"encoding/json"
 	"fmt"
 	"github.com/dgrijalva/jwt-go"
 	"github.com/graphql-go/graphql"
+	"github.com/graphql-go/handler"
 	"github.com/jinzhu/gorm"
 	"github.com/joho/godotenv"
+	"github.com/justinas/alice"
 	"github.com/qor/i18n"
 	"log"
 	"net/http"
 	"os"
 	"path"
 	"runtime"
-	"context"
-	"encoding/json"
-	"github.com/graphql-go/handler"
-	"github.com/justinas/alice"
 )
 
 var App Application
@@ -29,7 +29,7 @@ type Application struct {
 	Middleware      *Middleware
 	GraphQlMutation graphql.Fields
 	GraphQlQuery    graphql.Fields
-	Context  context.Context
+	Context         context.Context
 }
 
 func Start() {
@@ -43,10 +43,10 @@ func Start() {
 		Middleware:      ConstructorMiddleware(),
 		GraphQlQuery:    startQueries(),
 		GraphQlMutation: startMutations(),
-		Context:context.Background(),
+		Context:         context.Background(),
 	}
 
-	App.Middleware.LoadApplication()
+	App.Middleware.LoadApplication(&App.Context)
 
 	//root mutation
 	var rootMutation = graphql.NewObject(graphql.ObjectConfig{
@@ -78,14 +78,14 @@ func Start() {
 		//ctx := context.WithValue(context.Background(), "test", "get from context")
 		//h.ContextHandler(ctx)
 
-		h := http.HandlerFunc(func (w http.ResponseWriter, r *http.Request) {
+		h := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			opts := handler.NewRequestOptions(r)
 			result := graphql.Do(graphql.Params{
-				Schema: schema,
-				OperationName:opts.OperationName,
-				VariableValues:opts.Variables,
-				RequestString: opts.Query,
-				Context:       context.WithValue(context.Background(), "test", "test from context"),
+				Schema:         schema,
+				OperationName:  opts.OperationName,
+				VariableValues: opts.Variables,
+				RequestString:  opts.Query,
+				Context:        context.WithValue(context.Background(), "test", "test from context"),
 			})
 			if len(result.Errors) > 0 {
 				log.Printf("wrong result, unexpected errors: %v", result.Errors)
