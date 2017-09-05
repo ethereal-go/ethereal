@@ -4,7 +4,6 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"github.com/dgrijalva/jwt-go"
 	"github.com/graphql-go/graphql"
 	"github.com/graphql-go/handler"
 	"github.com/jinzhu/gorm"
@@ -31,6 +30,7 @@ type Application struct {
 	GraphQlMutation graphql.Fields
 	GraphQlQuery    graphql.Fields
 	Context         context.Context
+	Config          Config
 }
 
 func Start() {
@@ -45,19 +45,20 @@ func Start() {
 		GraphQlQuery:    startQueries(),
 		GraphQlMutation: startMutations(),
 		Context:         context.Background(),
+		Config:          Config{},
 	}
 
 	App.Middleware.LoadApplication(&App.Context)
-
+	App.Config.LoadConfigFromApp()
 	// Load configuration
-	_, currentPath, _, _ := runtime.Caller(0)
-	viper.SetConfigName("app")
-	viper.AddConfigPath(path.Dir(currentPath) + "/config")
-	err := viper.ReadInConfig() // Find and read the config file
-
-	if err != nil { // Handle errors reading the config file
-		panic(fmt.Errorf("Fatal error config file: %s \n", err))
-	}
+	//_, currentPath, _, _ := runtime.Caller(0)
+	//viper.SetConfigName("app")
+	//viper.AddConfigPath(path.Dir(currentPath) + "/config")
+	//err := viper.ReadInConfig() // Find and read the config file
+	//
+	//if err != nil { // Handle errors reading the config file
+	//	panic(fmt.Errorf("Fatal error config file: %s \n", err))
+	//}
 	//err = viper.ReadInConfig()
 	fmt.Println(viper.AllKeys())
 
