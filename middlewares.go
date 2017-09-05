@@ -13,7 +13,7 @@ import (
 / Add middleware in App under certain condition..
 */
 type AddMiddleware interface {
-	Add(*[]alice.Constructor, context.Context)
+	Add(*[]alice.Constructor, *context.Context)
 }
 
 type Middleware struct {
@@ -28,7 +28,7 @@ func (m Middleware) AddMiddleware(middleware ...AddMiddleware) {
 }
 
 // Method loading middleware for application
-func (m *Middleware) LoadApplication(ctx context.Context) []alice.Constructor {
+func (m *Middleware) LoadApplication(ctx *context.Context) []alice.Constructor {
 	for _, middleware := range m.allMiddleware {
 		middleware.Add(&m.includeMiddleware, ctx)
 	}
@@ -40,7 +40,7 @@ func (m *Middleware) LoadApplication(ctx context.Context) []alice.Constructor {
 */
 type middlewareJWTToken struct{}
 
-func (m middlewareJWTToken) Add(where *[]alice.Constructor, ctx context.Context) {
+func (m middlewareJWTToken) Add(where *[]alice.Constructor, ctx *context.Context) {
 
 	if os.Getenv("AUTH_JWT_TOKEN") != "" && os.Getenv("AUTH_JWT_TOKEN") == "true" {
 		*where = append(*where, func(handler http.Handler) http.Handler {

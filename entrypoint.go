@@ -11,6 +11,7 @@ import (
 	"github.com/joho/godotenv"
 	"github.com/justinas/alice"
 	"github.com/qor/i18n"
+	"github.com/spf13/viper"
 	"log"
 	"net/http"
 	"os"
@@ -47,6 +48,18 @@ func Start() {
 	}
 
 	App.Middleware.LoadApplication(&App.Context)
+
+	// Load configuration
+	_, currentPath, _, _ := runtime.Caller(0)
+	viper.SetConfigName("app")
+	viper.AddConfigPath(path.Dir(currentPath) + "/config")
+	err := viper.ReadInConfig() // Find and read the config file
+
+	if err != nil { // Handle errors reading the config file
+		panic(fmt.Errorf("Fatal error config file: %s \n", err))
+	}
+	//err = viper.ReadInConfig()
+	fmt.Println(viper.AllKeys())
 
 	//root mutation
 	var rootMutation = graphql.NewObject(graphql.ObjectConfig{
@@ -98,19 +111,19 @@ func Start() {
 		// here can add middleware
 		http.Handle("/graphql", alice.New(App.Middleware.includeMiddleware...).Then(h))
 
-		http.HandleFunc("/auth0/login", func(w http.ResponseWriter, r *http.Request) {
-			claims := EtherealClaims{
-				jwt.StandardClaims{
-					ExpiresAt: 15000,
-					Issuer:    "test",
-				},
-			}
-			// TODO add choose crypt via configuration!
-			token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-
-			tokenString, err := token.SignedString(JWTKEY())
-			fmt.Println(tokenString, err)
-		})
+		//http.HandleFunc("/auth0/login", func(w http.ResponseWriter, r *http.Request) {
+		//	claims := EtherealClaims{
+		//		jwt.StandardClaims{
+		//			ExpiresAt: 15000,
+		//			Issuer:    "test",
+		//		},
+		//	}
+		//	// TODO add choose crypt via configuration!
+		//	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+		//
+		//	tokenString, err := token.SignedString(JWTKEY())
+		//	fmt.Println(tokenString, err)
+		//})
 
 		// Serve static files, if variable env debug in true.
 		if os.Getenv("DEBAG") != "" && os.Getenv("DEBAG") == "true" {

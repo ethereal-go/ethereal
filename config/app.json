@@ -1,0 +1,20 @@
+{
+  "host": {
+    "port": 8080
+  },
+  "graphQL" :{
+    "debug":true
+  },
+  "database":{
+    "name":"",
+    "login":"",
+    "password":""
+  },
+  "auth":{
+    "jwt-token":false
+  },
+  "l18n" :{
+    "locale":"en-US"
+  }
+
+}
