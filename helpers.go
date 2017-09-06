@@ -4,6 +4,7 @@ import (
 	"github.com/spf13/viper"
 	"strings"
 	"os"
+	"context"
 )
 
 // Here functions helpers
@@ -22,3 +23,9 @@ func config(name string, byDefault ...interface{}) interface{} {
 	return temp
 }
 
+/**
+ / Add value in Context
+ */
+func ctx(ctx context.Context, app *Application, key interface{}, value interface{})  {
+	app.Context = context.WithValue(App.Context, key, value)
+}

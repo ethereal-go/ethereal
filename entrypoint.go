@@ -20,9 +20,7 @@ var App Application
 
 // Base structure
 type Application struct {
-	// library gorm for work database
 	Db *gorm.DB
-	// localization application
 	I18n            *i18n.I18n
 	Middleware      *Middleware
 	GraphQlMutation graphql.Fields
@@ -78,6 +76,10 @@ func Start() {
 	if len(os.Args) > 1 {
 		CliRun()
 	} else {
+		ctx(App.Context, &App,"jwt", JwtTokenRule{
+			exclude: []*graphql.Object{
+				usersType,
+			}})
 
 		h := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			opts := handler.NewRequestOptions(r)
@@ -86,7 +88,7 @@ func Start() {
 				OperationName:  opts.OperationName,
 				VariableValues: opts.Variables,
 				RequestString:  opts.Query,
-				Context:        context.WithValue(context.Background(), "test", "test from context"),
+				Context:        App.Context,
 			})
 			if len(result.Errors) > 0 {
 				log.Printf("wrong result, unexpected errors: %v", result.Errors)

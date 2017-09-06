@@ -42,6 +42,7 @@ type middlewareJWTToken struct{}
 
 func (m middlewareJWTToken) Add(where *[]alice.Constructor, ctx *context.Context) {
 
+
 	if os.Getenv("AUTH_JWT_TOKEN") != "" && os.Getenv("AUTH_JWT_TOKEN") == "true" {
 		*where = append(*where, func(handler http.Handler) http.Handler {
 			// To add the ability to select the type of authenticate
