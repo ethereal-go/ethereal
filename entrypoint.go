@@ -51,7 +51,7 @@ func Start() {
 		Config:          ConstructorConfig(),
 	}
 
-	App.Middleware.LoadApplication(&App)
+	App.Middleware.LoadApplication()
 
 	//root mutation
 	var rootMutation = graphql.NewObject(graphql.ObjectConfig{

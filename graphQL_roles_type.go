@@ -26,7 +26,6 @@ var roleType = graphql.NewObject(graphql.ObjectConfig{
 	},
 })
 
-
 var RoleField = graphql.Field{
 	Type:        graphql.NewList(roleType),
 	Description: string(ConstructorI18N().T(config("L18N.LOCALE").(string), "graphQL.Role.Description")),
@@ -36,17 +35,17 @@ var RoleField = graphql.Field{
 		},
 	},
 	Resolve: func(params graphql.ResolveParams) (interface{}, error) {
-		var roles []Role
-		App.Db.Find(&roles)
+			var roles []Role
+			App.Db.Find(&roles)
 
-		idQuery, isOK := params.Args["id"].(string)
-		if isOK {
-			for _, role := range roles {
-				if string(role.ID) == idQuery {
-					return role, nil
+			idQuery, isOK := params.Args["id"].(string)
+			if isOK {
+				for _, role := range roles {
+					if string(role.ID) == idQuery {
+						return role, nil
+					}
 				}
 			}
-		}
-		return roles, nil
+			return roles, nil
 	},
 }

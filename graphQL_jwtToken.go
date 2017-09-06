@@ -37,32 +37,32 @@ var createJWTToken = graphql.Field{
 		},
 	},
 	Resolve: func(params graphql.ResolveParams) (interface{}, error) {
-		var user User
-		var generateToken string
-		login, _ := params.Args["login"].(string)
-		password, _ := params.Args["password"].(string)
+			var user User
+			var generateToken string
+			login, _ := params.Args["login"].(string)
+			password, _ := params.Args["password"].(string)
 
-		App.Db.Where("email = ?", login).First(&user)
+			App.Db.Where("email = ?", login).First(&user)
 
-		if utils.CompareHashPassword([]byte(user.Password), []byte(password)) {
-			claims := EtherealClaims{
-				jwt.StandardClaims{
-					ExpiresAt: 1,
-					Issuer:    user.Email,
-				},
+			if utils.CompareHashPassword([]byte(user.Password), []byte(password)) {
+				claims := EtherealClaims{
+					jwt.StandardClaims{
+						ExpiresAt: 1,
+						Issuer:    user.Email,
+					},
+				}
+				// TODO add choose crypt via configuration!
+				token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+
+				generateToken, _ = token.SignedString(JWTKEY())
+
+			} else {
+				return nil, errors.New(errorInputData)
 			}
-			// TODO add choose crypt via configuration!
-			token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 
-			generateToken, _ = token.SignedString(JWTKEY())
-
-		} else {
-			return nil, errors.New(errorInputData)
-		}
-
-		return struct {
-			Token string `json:"token"`
-		}{generateToken}, nil
+			return struct {
+				Token string `json:"token"`
+			}{generateToken}, nil
 	},
 }
 

@@ -6,14 +6,13 @@ import (
 	"net/http"
 	"os"
 	"strings"
-	"github.com/graphql-go/graphql"
 )
 
 /**
 / Add middleware in App under certain condition..
 */
 type AddMiddleware interface {
-	Add(*[]alice.Constructor, *Application)
+	Add(*[]alice.Constructor)
 }
 
 type Middleware struct {
@@ -28,9 +27,9 @@ func (m Middleware) AddMiddleware(middleware ...AddMiddleware) {
 }
 
 // Method loading middleware for application
-func (m *Middleware) LoadApplication(app *Application) []alice.Constructor {
+func (m *Middleware) LoadApplication() []alice.Constructor {
 	for _, middleware := range m.allMiddleware {
-		middleware.Add(&m.includeMiddleware, app)
+		middleware.Add(&m.includeMiddleware)
 	}
 	return m.includeMiddleware
 }
@@ -40,15 +39,12 @@ func (m *Middleware) LoadApplication(app *Application) []alice.Constructor {
 */
 type middlewareJWTToken struct{}
 
-func (m middlewareJWTToken) Add(where *[]alice.Constructor, app *Application) {
-	AddContext(app, JwtTokenRule{
-		exclude: []*graphql.Object{
-			usersType,
-		}})
-	if os.Getenv("AUTH_JWT_TOKEN") != "" && os.Getenv("AUTH_JWT_TOKEN") == "true" {
+func (m middlewareJWTToken) Add(where *[]alice.Constructor) {
+	if os.Getenv("AUTH_JWT_TOKEN") != "" && os.Getenv("AUTH_JWT_TOKEN") == "global" {
 		*where = append(*where, func(handler http.Handler) http.Handler {
 			// To add the ability to select the type of authenticate
 			return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+
 				authHeader := r.Header.Get("Authorization")
 
 				// get token

@@ -10,6 +10,7 @@ type Rule interface {
 
 type JwtTokenRule struct {
 	exclude []*graphql.Object
+	authenticated bool
 }
 
 func (jwt JwtTokenRule) Verify(support interface{}) bool {

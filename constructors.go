@@ -31,7 +31,7 @@ func ConstructorDb() *gorm.DB {
 func ConstructorMiddleware() *Middleware {
 	if App.Middleware == nil {
 		App.Middleware = &Middleware{allMiddleware: []AddMiddleware{
-			// list standard
+			// list standard middleware
 			middlewareJWTToken{},
 		}}
 	}
@@ -64,7 +64,7 @@ func Queries() GraphQlQueries {
 
 // Function add default field mutation
 func startMutations() map[string]*graphql.Field {
-	Mutations().Add("createUser", &createUser)
+	Mutations().Add("createUser", &createUser).Add("token", &createJWTToken)
 	return mutations
 }
 
