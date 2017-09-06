@@ -79,6 +79,7 @@ func Start() {
 
 		h := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			opts := handler.NewRequestOptions(r)
+			fmt.Println(opts.OperationName)
 			result := graphql.Do(graphql.Params{
 				Schema:         schema,
 				OperationName:  opts.OperationName,
@@ -118,6 +119,6 @@ func Start() {
 		}
 
 		fmt.Println("Now server is running on port " + host)
-		http.ListenAndServe(":"+host, nil)
+		http.ListenAndServe(":" + host, nil)
 	}
 }
