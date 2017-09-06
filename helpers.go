@@ -31,6 +31,9 @@ func ctxStruct(app *Application, value interface{})  {
 	app.Context = context.WithValue(App.Context, getType(value), value)
 }
 
+func ctx(app *Application, key interface{}, value interface{})  {
+	app.Context = context.WithValue(App.Context, key, value)
+}
 /**
  / Get type
  */

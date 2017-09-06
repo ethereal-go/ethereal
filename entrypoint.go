@@ -52,6 +52,7 @@ func Start() {
 	}
 
 	App.Middleware.LoadApplication(&App.Context)
+	contextBootstrapping()
 
 	//root mutation
 	var rootMutation = graphql.NewObject(graphql.ObjectConfig{
@@ -76,10 +77,6 @@ func Start() {
 	if len(os.Args) > 1 {
 		CliRun()
 	} else {
-		ctxStruct(&App, JwtTokenRule{
-			exclude: []*graphql.Object{
-
-			}})
 
 		h := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			opts := handler.NewRequestOptions(r)
