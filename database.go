@@ -3,27 +3,15 @@ package ethereal
 import (
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
-	"os"
-	"github.com/spf13/viper"
-	"strings"
 )
 
 func Database() *gorm.DB {
+	// configuration parameters
 	var (
-		login string
-		password string
-		database string
-
+		login    string = config("DATABASE.LOGIN").(string)
+		password string = config("DATABASE.PASSWORD").(string)
+		database string = config("DATABASE.NAME").(string)
 	)
-	if login = os.Getenv("DATABASE.LOGIN"); login == "" {
-		login = viper.GetString(strings.ToLower("DATABASE.LOGIN"))
-	}
-	if password = os.Getenv("DATABASE.PASSWORD"); password == "" {
-		password = viper.GetString(strings.ToLower("DATABASE.PASSWORD"))
-	}
-	if database = os.Getenv("DATABASE.NAME"); database == "" {
-		database = viper.GetString(strings.ToLower("DATABASE.NAME"))
-	}
 
 	db, err := gorm.Open("mysql", login+
 		":"+password+

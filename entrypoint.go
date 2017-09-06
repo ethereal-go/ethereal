@@ -9,13 +9,11 @@ import (
 	"github.com/jinzhu/gorm"
 	"github.com/justinas/alice"
 	"github.com/qor/i18n"
-	"github.com/spf13/viper"
 	"log"
 	"net/http"
 	"os"
 	"path"
 	"runtime"
-	"strings"
 )
 
 var App Application
@@ -36,8 +34,8 @@ type Application struct {
 func Start() {
 	// config variables
 	var (
-		debug string
-		host  string
+		debug string = config("GRAPHQL.DEBUG").(string)
+		host  string = config("HOST.PORT").(string)
 	)
 
 	// First we have to determine the mode of operation
@@ -120,13 +118,6 @@ func Start() {
 		//	tokenString, err := token.SignedString(JWTKEY())
 		//	fmt.Println(tokenString, err)
 		//})
-
-		if debug = os.Getenv("GRAPHQL.DEBUG"); debug == "" {
-			debug = viper.GetString(strings.ToLower("GRAPHQL.DEBUG"))
-		}
-		if host = os.Getenv("HOST.PORT"); host == "" {
-			host = viper.GetString(strings.ToLower("HOST.PORT"))
-		}
 
 		// Serve static files, if variable env debug in true.
 		if debug == "true" {
