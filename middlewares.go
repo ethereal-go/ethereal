@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"os"
 	"strings"
+	"encoding/json"
 )
 
 /**
@@ -61,7 +62,8 @@ func (m middlewareJWTToken) Add(where *[]alice.Constructor) {
 				} else {
 					// required authentication..
 					w.WriteHeader(http.StatusNetworkAuthenticationRequired)
-					fmt.Fprint(w, http.StatusText(http.StatusNetworkAuthenticationRequired))
+					json.NewEncoder(w).Encode(http.StatusText(http.StatusNetworkAuthenticationRequired))
+					//fmt.Fprint(w, http.StatusText(http.StatusNetworkAuthenticationRequired))
 					return
 				}
 			})
