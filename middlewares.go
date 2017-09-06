@@ -1,7 +1,6 @@
 package ethereal
 
 import (
-	"fmt"
 	"github.com/justinas/alice"
 	"net/http"
 	"os"
@@ -55,7 +54,7 @@ func (m middlewareJWTToken) Add(where *[]alice.Constructor) {
 
 					if t, err := compareToken(token); err != nil && !t.Valid {
 						w.WriteHeader(http.StatusNetworkAuthenticationRequired)
-						fmt.Fprint(w, handlerErrorToken(err).Error())
+						json.NewEncoder(w).Encode(handlerErrorToken(err).Error())
 						return
 					}
 
@@ -63,7 +62,6 @@ func (m middlewareJWTToken) Add(where *[]alice.Constructor) {
 					// required authentication..
 					w.WriteHeader(http.StatusNetworkAuthenticationRequired)
 					json.NewEncoder(w).Encode(http.StatusText(http.StatusNetworkAuthenticationRequired))
-					//fmt.Fprint(w, http.StatusText(http.StatusNetworkAuthenticationRequired))
 					return
 				}
 			})
