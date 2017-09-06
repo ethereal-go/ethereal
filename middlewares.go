@@ -1,19 +1,19 @@
 package ethereal
 
 import (
-	"context"
 	"fmt"
 	"github.com/justinas/alice"
 	"net/http"
 	"os"
 	"strings"
+	"github.com/graphql-go/graphql"
 )
 
 /**
 / Add middleware in App under certain condition..
 */
 type AddMiddleware interface {
-	Add(*[]alice.Constructor, *context.Context)
+	Add(*[]alice.Constructor, *Application)
 }
 
 type Middleware struct {
@@ -28,9 +28,9 @@ func (m Middleware) AddMiddleware(middleware ...AddMiddleware) {
 }
 
 // Method loading middleware for application
-func (m *Middleware) LoadApplication(ctx *context.Context) []alice.Constructor {
+func (m *Middleware) LoadApplication(app *Application) []alice.Constructor {
 	for _, middleware := range m.allMiddleware {
-		middleware.Add(&m.includeMiddleware, ctx)
+		middleware.Add(&m.includeMiddleware, app)
 	}
 	return m.includeMiddleware
 }
@@ -40,9 +40,11 @@ func (m *Middleware) LoadApplication(ctx *context.Context) []alice.Constructor {
 */
 type middlewareJWTToken struct{}
 
-func (m middlewareJWTToken) Add(where *[]alice.Constructor, ctx *context.Context) {
-
-
+func (m middlewareJWTToken) Add(where *[]alice.Constructor, app *Application) {
+	AddContext(app, JwtTokenRule{
+		exclude: []*graphql.Object{
+			usersType,
+		}})
 	if os.Getenv("AUTH_JWT_TOKEN") != "" && os.Getenv("AUTH_JWT_TOKEN") == "true" {
 		*where = append(*where, func(handler http.Handler) http.Handler {
 			// To add the ability to select the type of authenticate

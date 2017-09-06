@@ -1,8 +1,6 @@
 package ethereal
 
 import (
-	"github.com/graphql-go/graphql"
-	"fmt"
 	"reflect"
 )
 
@@ -14,17 +12,10 @@ import (
  / Two:key choose
  */
 func AddContext(value ...interface{})  {
-	switch reflect.ValueOf(value[0]).Kind() {
+	switch reflect.ValueOf(value[1]).Kind() {
 	case reflect.Struct:
-		ctxStruct(&App, value[0])
+		ctxStruct(value[0].(*Application), value[1])
 	default:
-		ctx(&App, value[0], value[1])
+		ctx(value[0].(*Application), value[1], value[2])
 	}
-}
-
-func contextBootstrapping()  {
-	AddContext(JwtTokenRule{
-		exclude: []*graphql.Object{
-		  usersType,
-		}})
 }

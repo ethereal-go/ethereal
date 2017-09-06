@@ -20,7 +20,7 @@ var App Application
 
 // Base structure
 type Application struct {
-	Db *gorm.DB
+	Db              *gorm.DB
 	I18n            *i18n.I18n
 	Middleware      *Middleware
 	GraphQlMutation graphql.Fields
@@ -51,8 +51,7 @@ func Start() {
 		Config:          ConstructorConfig(),
 	}
 
-	App.Middleware.LoadApplication(&App.Context)
-	contextBootstrapping()
+	App.Middleware.LoadApplication(&App)
 
 	//root mutation
 	var rootMutation = graphql.NewObject(graphql.ObjectConfig{
