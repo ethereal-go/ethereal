@@ -32,7 +32,7 @@ type Application struct {
 }
 
 func Start() {
-	// config variables
+	// Config variables
 	var (
 		debug string = config("GRAPHQL.DEBUG").(string)
 		host  string = config("HOST.PORT").(string)
@@ -78,12 +78,6 @@ func Start() {
 	if len(os.Args) > 1 {
 		CliRun()
 	} else {
-		//h := handler.New(&handler.Config{
-		//	Schema: &schema,
-		//	Pretty: true,
-		//})
-		//ctx := context.WithValue(context.Background(), "test", "get from context")
-		//h.ContextHandler(ctx)
 
 		h := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			opts := handler.NewRequestOptions(r)
@@ -100,8 +94,7 @@ func Start() {
 			}
 			json.NewEncoder(w).Encode(result)
 		})
-		//myHandler := http.HandlerFunc(myApp)
-		//alice.New(App.Middleware.includeMiddleware...).Then(h)
+
 		// here can add middleware
 		http.Handle("/graphql", alice.New(App.Middleware.includeMiddleware...).Then(h))
 

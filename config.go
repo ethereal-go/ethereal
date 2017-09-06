@@ -2,17 +2,15 @@ package ethereal
 
 import (
 	"fmt"
-	"github.com/agoalofalife/ethereal/utils"
 	"github.com/joho/godotenv"
 	"github.com/spf13/viper"
 	"log"
 	"os"
-	"path"
 	"path/filepath"
 )
 
 type Config struct {
-	BasePath string
+	BasePath []string
 	FileName string
 }
 
@@ -25,15 +23,10 @@ func (c Config) LoadConfigFromApp() {
 	if err != nil {
 		panic(err)
 	}
-	c.BasePath = filepath.Join(workPath, "config")
-	appConfigPath := filepath.Join(workPath, "config", "app.json")
-
-	if !utils.FileExists(path.Dir(appConfigPath)) {
-		panic("Not Found config file.")
-	}
+	c.BasePath = append(c.BasePath, filepath.Join(workPath, "config"), workPath)
 
 	viper.SetConfigName("app")
-	viper.AddConfigPath(c.BasePath)
+	c.addAllPathsConfig(c.BasePath)
 
 	err = viper.ReadInConfig() // Find and read the config file
 
@@ -43,5 +36,14 @@ func (c Config) LoadConfigFromApp() {
 	err = godotenv.Load()
 	if err != nil {
 		log.Fatal("Error loading .env file")
+	}
+}
+
+/**
+ / Set all paths possible in application
+ */
+func (c Config) addAllPathsConfig(paths []string) {
+	for _, path := range paths {
+		viper.AddConfigPath(path)
 	}
 }
