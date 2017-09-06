@@ -1,6 +1,7 @@
 package ethereal
 
 import (
+	"errors"
 	"github.com/agoalofalife/ethereal/utils"
 	"github.com/graphql-go/graphql"
 	"golang.org/x/crypto/bcrypt"
@@ -84,30 +85,31 @@ var UserField = graphql.Field{
 		},
 	},
 	Resolve: func(params graphql.ResolveParams) (interface{}, error) {
-		fmt.Println(params.Context.Value("jwt"))
-		//fmt.Println(params.Info.ReturnType.Name() == usersType.Name())
-		var users []*User
-		App.Db.Find(&users)
+		if params.Context.Value("JwtTokenRule").(Rule).Verify(params.Info.ReturnType.Name()) {
+			var users []*User
+			App.Db.Find(&users)
 
-		idQuery, isOK := params.Args["id"].(string)
+			idQuery, isOK := params.Args["id"].(string)
 
-		if isOK {
-			for _, user := range users {
-				if strconv.Itoa(int(user.ID)) == idQuery {
-					var role Role
-					App.Db.Model(&user).Related(&role)
-					user.Role = role
-					return []User{*user}, nil
+			if isOK {
+				for _, user := range users {
+					if strconv.Itoa(int(user.ID)) == idQuery {
+						var role Role
+						App.Db.Model(&user).Related(&role)
+						user.Role = role
+						return []User{*user}, nil
+					}
 				}
 			}
-		}
 
-		for _, user := range users {
-			var role Role
-			App.Db.Model(&user).Related(&role)
-			user.Role = role
-		}
+			for _, user := range users {
+				var role Role
+				App.Db.Model(&user).Related(&role)
+				user.Role = role
+			}
 
-		return users, nil
+			return users, nil
+		}
+		return nil, errors.New("Jwt token")
 	},
 }

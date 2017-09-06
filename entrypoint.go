@@ -76,9 +76,9 @@ func Start() {
 	if len(os.Args) > 1 {
 		CliRun()
 	} else {
-		ctx(App.Context, &App,"jwt", JwtTokenRule{
+		ctxStruct(&App, JwtTokenRule{
 			exclude: []*graphql.Object{
-				usersType,
+
 			}})
 
 		h := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {

@@ -5,6 +5,7 @@ import (
 	"strings"
 	"os"
 	"context"
+	"reflect"
 )
 
 // Here functions helpers
@@ -24,8 +25,19 @@ func config(name string, byDefault ...interface{}) interface{} {
 }
 
 /**
- / Add value in Context
+ / Add value in Context structure
  */
-func ctx(ctx context.Context, app *Application, key interface{}, value interface{})  {
-	app.Context = context.WithValue(App.Context, key, value)
+func ctxStruct(app *Application, value interface{})  {
+	app.Context = context.WithValue(App.Context, getType(value), value)
+}
+
+/**
+ / Get type
+ */
+func getType(unknown interface{}) string {
+	if t := reflect.TypeOf(unknown); t.Kind() == reflect.Ptr {
+		return "*" + t.Elem().Name()
+	} else {
+		return t.Name()
+	}
 }
