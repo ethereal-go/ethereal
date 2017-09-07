@@ -5,7 +5,6 @@ import (
 	"github.com/graphql-go/graphql"
 	"golang.org/x/crypto/bcrypt"
 	"strconv"
-	"fmt"
 )
 
 /**
@@ -84,8 +83,6 @@ var UserField = graphql.Field{
 		},
 	},
 	Resolve: func(params graphql.ResolveParams) (interface{}, error) {
-		fmt.Println("This id method@")
-			fmt.Println( params.Context.Value("jwt"))
 			var users []*User
 			App.Db.Find(&users)
 

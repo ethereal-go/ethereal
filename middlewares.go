@@ -1,7 +1,6 @@
 package ethereal
 
 import (
-
 	"encoding/json"
 	"github.com/justinas/alice"
 	"net/http"
@@ -41,36 +40,30 @@ func (m *Middleware) LoadApplication(application *Application) []alice.Construct
 type middlewareJWTToken struct{}
 
 func (m middlewareJWTToken) Add(where *[]alice.Constructor, application *Application) {
-
 	handle := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		authHeader := r.Header.Get("Authorization")
+		headerBearer := r.Header.Get("Authorization")
 
 		// get token
-		if strings.HasPrefix(authHeader, "Bearer") {
-			token := strings.Replace(authHeader, "Bearer", "", 1)
+		if strings.HasPrefix(headerBearer, "Bearer") {
+			token := strings.Replace(headerBearer, "Bearer", "", 1)
 			token = strings.Trim(token, " ")
 
 			if t, err := compareToken(token); err != nil && !t.Valid {
 				w.WriteHeader(http.StatusNetworkAuthenticationRequired)
 				json.NewEncoder(w).Encode(handlerErrorToken(err).Error())
-				//application.Context = context.WithValue(application.Context, "jwt", map[string]string{
-				//	"status": string(http.StatusNetworkAuthenticationRequired),
-				//	"response":json.NewEncoder(w).Encode(handlerErrorToken(err).Error()).Error(),
-				//})
 				return
 			}
-
 		} else {
 			// required authentication..
-			//w.WriteHeader(http.StatusNetworkAuthenticationRequired)
-			//json.NewEncoder(w).Encode(http.StatusText(http.StatusNetworkAuthenticationRequired))
+			w.WriteHeader(http.StatusNetworkAuthenticationRequired)
+			json.NewEncoder(w).Encode(http.StatusText(http.StatusNetworkAuthenticationRequired))
 
 			//application.Context = context.WithValue(application.Context, "jwt", map[string]string{
 			//	"status":   string(http.StatusNetworkAuthenticationRequired),
 			//	"response": http.StatusText(http.StatusNetworkAuthenticationRequired),
 			//})
 			//
-			//return
+			return
 
 		}
 	})
