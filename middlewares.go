@@ -1,7 +1,6 @@
 package ethereal
 
 import (
-	"encoding/json"
 	"github.com/justinas/alice"
 	"log"
 	"net/http"
@@ -38,19 +37,21 @@ func (m *Middleware) LoadApplication(application *Application) []alice.Construct
 / ability to set jwt token all queries or choose query
 */
 type middlewareJWTToken struct {
-	status         int
-	responseText   string
+	statusError    int
+	responseError  string
 	authenticated  bool
 	responseWriter http.ResponseWriter
-	included bool
+	included       bool
 }
 
 func (m middlewareJWTToken) Add(where *[]alice.Constructor, application *Application) {
 	confToken := config("AUTH.JWT_TOKEN").(string)
 
-	if confToken != "" && confToken == "true" {
+	if confToken == "local" {
+		m.included = true
 		*where = append(*where, func(handler http.Handler) http.Handler {
 			return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+				m.responseWriter = w
 				headerBearer := r.Header.Get("Authorization")
 
 				// get token
@@ -59,24 +60,21 @@ func (m middlewareJWTToken) Add(where *[]alice.Constructor, application *Applica
 					token = strings.Trim(token, " ")
 
 					if t, err := compareToken(token); err != nil && !t.Valid {
-						w.WriteHeader(http.StatusNetworkAuthenticationRequired)
-						json.NewEncoder(w).Encode(handlerErrorToken(err).Error())
-						return
+						m.responseError = handlerErrorToken(err).Error()
 					}
+					m.authenticated = true
 				} else {
-					m.responseText = http.StatusText(http.StatusNetworkAuthenticationRequired)
-					m.status = http.StatusNetworkAuthenticationRequired
-					m.authenticated = false
-					m.responseWriter = w
-					m.included = true
+
 				}
+				ctxStruct(application, m)
 				handler.ServeHTTP(w, r)
 			})
 		})
-	} else if confToken != "false" {
+	} else if confToken == "global" {
+		// check jwt token all queries..
+	} else {
 		log.Println("Our config parameter AUTH.JWT_TOKEN = " + confToken)
 	}
-	ctxStruct(application, m)
 }
 
 // ---- waiting for your implementation ------

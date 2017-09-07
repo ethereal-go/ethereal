@@ -5,6 +5,7 @@ import (
 	"github.com/jinzhu/gorm"
 	"github.com/qor/i18n"
 	"github.com/qor/i18n/backends/database"
+	"net/http"
 )
 
 // Here all constructors application, which return some structure...
@@ -32,7 +33,10 @@ func ConstructorMiddleware() *Middleware {
 	if App.Middleware == nil {
 		App.Middleware = &Middleware{allMiddleware: []AddMiddleware{
 			// list standard middleware
-			middlewareJWTToken{},
+			middlewareJWTToken{
+				responseError:http.StatusText(http.StatusNetworkAuthenticationRequired),
+				statusError:http.StatusNetworkAuthenticationRequired,
+			},
 		}}
 	}
 	return App.Middleware

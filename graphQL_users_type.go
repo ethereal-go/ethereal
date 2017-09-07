@@ -3,7 +3,6 @@ package ethereal
 import (
 	"encoding/json"
 	"errors"
-	"fmt"
 	"github.com/agoalofalife/ethereal/utils"
 	"github.com/graphql-go/graphql"
 	"golang.org/x/crypto/bcrypt"
@@ -114,8 +113,8 @@ var UserField = graphql.Field{
 
 			return users, nil
 		}
-		jwtAuth.responseWriter.WriteHeader(jwtAuth.status)
+		jwtAuth.responseWriter.WriteHeader(jwtAuth.statusError)
 		json.NewEncoder(jwtAuth.responseWriter).Encode(http.StatusText(http.StatusNetworkAuthenticationRequired))
-		return nil, errors.New(jwtAuth.responseText)
+		return nil, errors.New(jwtAuth.responseError)
 	},
 }
