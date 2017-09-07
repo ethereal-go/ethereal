@@ -2,9 +2,7 @@ package ethereal
 
 import (
 	"encoding/json"
-	"fmt"
 	"github.com/justinas/alice"
-	"log"
 	"net/http"
 )
 
@@ -67,15 +65,12 @@ func (m middlewareJWTToken) Add(where *[]alice.Constructor, application *Applica
 		// check jwt token all queries..
 		*where = append(*where, func(handler http.Handler) http.Handler {
 			return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-				fmt.Println("working")
 				if check, err := m.jwt.Verify(r); !check {
 					json.NewEncoder(w).Encode(handlerErrorToken(err).Error())
 					w.WriteHeader(m.statusError)
 				}
 			})
 		})
-	} else {
-		log.Println("Our config parameter AUTH.JWT_TOKEN = " + confToken)
 	}
 }
 
