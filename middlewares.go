@@ -1,18 +1,19 @@
 package ethereal
 
 import (
+
+	"encoding/json"
 	"github.com/justinas/alice"
 	"net/http"
 	"os"
 	"strings"
-	"encoding/json"
 )
 
 /**
 / Add middleware in App under certain condition..
 */
 type AddMiddleware interface {
-	Add(*[]alice.Constructor)
+	Add(*[]alice.Constructor, *Application)
 }
 
 type Middleware struct {
@@ -27,9 +28,9 @@ func (m Middleware) AddMiddleware(middleware ...AddMiddleware) {
 }
 
 // Method loading middleware for application
-func (m *Middleware) LoadApplication() []alice.Constructor {
+func (m *Middleware) LoadApplication(application *Application) []alice.Constructor {
 	for _, middleware := range m.allMiddleware {
-		middleware.Add(&m.includeMiddleware)
+		middleware.Add(&m.includeMiddleware, application)
 	}
 	return m.includeMiddleware
 }
@@ -39,32 +40,45 @@ func (m *Middleware) LoadApplication() []alice.Constructor {
 */
 type middlewareJWTToken struct{}
 
-func (m middlewareJWTToken) Add(where *[]alice.Constructor) {
+func (m middlewareJWTToken) Add(where *[]alice.Constructor, application *Application) {
+
+	handle := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		authHeader := r.Header.Get("Authorization")
+
+		// get token
+		if strings.HasPrefix(authHeader, "Bearer") {
+			token := strings.Replace(authHeader, "Bearer", "", 1)
+			token = strings.Trim(token, " ")
+
+			if t, err := compareToken(token); err != nil && !t.Valid {
+				w.WriteHeader(http.StatusNetworkAuthenticationRequired)
+				json.NewEncoder(w).Encode(handlerErrorToken(err).Error())
+				//application.Context = context.WithValue(application.Context, "jwt", map[string]string{
+				//	"status": string(http.StatusNetworkAuthenticationRequired),
+				//	"response":json.NewEncoder(w).Encode(handlerErrorToken(err).Error()).Error(),
+				//})
+				return
+			}
+
+		} else {
+			// required authentication..
+			//w.WriteHeader(http.StatusNetworkAuthenticationRequired)
+			//json.NewEncoder(w).Encode(http.StatusText(http.StatusNetworkAuthenticationRequired))
+
+			//application.Context = context.WithValue(application.Context, "jwt", map[string]string{
+			//	"status":   string(http.StatusNetworkAuthenticationRequired),
+			//	"response": http.StatusText(http.StatusNetworkAuthenticationRequired),
+			//})
+			//
+			//return
+
+		}
+	})
+
 	if os.Getenv("AUTH_JWT_TOKEN") != "" && os.Getenv("AUTH_JWT_TOKEN") == "global" {
 		*where = append(*where, func(handler http.Handler) http.Handler {
 			// To add the ability to select the type of authenticate
-			return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-
-				authHeader := r.Header.Get("Authorization")
-
-				// get token
-				if strings.HasPrefix(authHeader, "Bearer") {
-					token := strings.Replace(authHeader, "Bearer", "", 1)
-					token = strings.Trim(token, " ")
-
-					if t, err := compareToken(token); err != nil && !t.Valid {
-						w.WriteHeader(http.StatusNetworkAuthenticationRequired)
-						json.NewEncoder(w).Encode(handlerErrorToken(err).Error())
-						return
-					}
-
-				} else {
-					// required authentication..
-					w.WriteHeader(http.StatusNetworkAuthenticationRequired)
-					json.NewEncoder(w).Encode(http.StatusText(http.StatusNetworkAuthenticationRequired))
-					return
-				}
-			})
+			return handle
 		})
 	}
 }

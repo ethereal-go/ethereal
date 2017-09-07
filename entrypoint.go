@@ -51,7 +51,7 @@ func Start() {
 		Config:          ConstructorConfig(),
 	}
 
-	App.Middleware.LoadApplication()
+	App.Middleware.LoadApplication(&App)
 
 	//root mutation
 	var rootMutation = graphql.NewObject(graphql.ObjectConfig{
@@ -79,7 +79,6 @@ func Start() {
 
 		h := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			opts := handler.NewRequestOptions(r)
-			fmt.Println(opts.OperationName)
 			result := graphql.Do(graphql.Params{
 				Schema:         schema,
 				OperationName:  opts.OperationName,
