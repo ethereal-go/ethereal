@@ -1,23 +1,23 @@
 package ethereal
 
 import (
-	"github.com/spf13/viper"
-	"strings"
-	"os"
 	"context"
+	"github.com/spf13/viper"
+	"os"
 	"reflect"
+	"strings"
 )
 
 // Here functions helpers
 // ----------------------------------
 
 /**
- / Get configuration value
- */
+/ Get configuration value
+*/
 func config(name string, byDefault ...interface{}) interface{} {
 	var temp string
 	if temp = os.Getenv(name); temp == "" {
-		if temp = viper.GetString(strings.ToLower(name)); temp == ""{
+		if temp = viper.GetString(strings.ToLower(name)); temp == "" {
 			viper.SetDefault(name, byDefault)
 		}
 	}
@@ -25,18 +25,21 @@ func config(name string, byDefault ...interface{}) interface{} {
 }
 
 /**
- / Add value in Context structure
- */
-func ctxStruct(app *Application, value interface{})  {
+/ Add value in Context structure
+*/
+func ctxStruct(app *Application, value interface{}) context.Context {
 	app.Context = context.WithValue(App.Context, getType(value), value)
+	return app.Context
 }
 
-func ctx(app *Application, key interface{}, value interface{})  {
+func ctx(app *Application, key interface{}, value interface{}) context.Context {
 	app.Context = context.WithValue(App.Context, key, value)
+	return app.Context
 }
+
 /**
- / Get type
- */
+/ Get type
+*/
 func getType(unknown interface{}) string {
 	if t := reflect.TypeOf(unknown); t.Kind() == reflect.Ptr {
 		return "*" + t.Elem().Name()

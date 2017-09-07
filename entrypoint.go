@@ -47,7 +47,7 @@ func Start() {
 		Middleware:      ConstructorMiddleware(),
 		GraphQlQuery:    startQueries(),
 		GraphQlMutation: startMutations(),
-		Context:         context.Background(),
+		Context:         ctxStruct(&App, App),
 		Config:          ConstructorConfig(),
 	}
 

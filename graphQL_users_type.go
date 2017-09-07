@@ -83,6 +83,8 @@ var UserField = graphql.Field{
 		},
 	},
 	Resolve: func(params graphql.ResolveParams) (interface{}, error) {
+		// code for local jwt token..
+
 		//jwtAuth := params.Context.Value("middlewareJWTToken").(middlewareJWTToken)
 		//
 		//if jwtAuth.included == false || jwtAuth.authenticated {
