@@ -1,12 +1,9 @@
 package ethereal
 
 import (
-	"encoding/json"
-	"errors"
 	"github.com/agoalofalife/ethereal/utils"
 	"github.com/graphql-go/graphql"
 	"golang.org/x/crypto/bcrypt"
-	"net/http"
 	"strconv"
 )
 
@@ -86,9 +83,9 @@ var UserField = graphql.Field{
 		},
 	},
 	Resolve: func(params graphql.ResolveParams) (interface{}, error) {
-		jwtAuth := params.Context.Value("middlewareJWTToken").(middlewareJWTToken)
-
-		if jwtAuth.included == false || jwtAuth.authenticated {
+		//jwtAuth := params.Context.Value("middlewareJWTToken").(middlewareJWTToken)
+		//
+		//if jwtAuth.included == false || jwtAuth.authenticated {
 			var users []*User
 			App.Db.Find(&users)
 
@@ -112,9 +109,9 @@ var UserField = graphql.Field{
 			}
 
 			return users, nil
-		}
-		jwtAuth.responseWriter.WriteHeader(jwtAuth.statusError)
-		json.NewEncoder(jwtAuth.responseWriter).Encode(http.StatusText(http.StatusNetworkAuthenticationRequired))
-		return nil, errors.New(jwtAuth.responseError)
+		//}
+		//jwtAuth.responseWriter.WriteHeader(jwtAuth.statusError)
+		//json.NewEncoder(jwtAuth.responseWriter).Encode(http.StatusText(jwtAuth.statusError))
+		//return nil, errors.New(jwtAuth.responseError)
 	},
 }

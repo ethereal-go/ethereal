@@ -3,6 +3,8 @@ package ethereal
 import (
 	"errors"
 	"github.com/dgrijalva/jwt-go"
+	"net/http"
+	"strings"
 )
 
 type EtherealClaims struct {
@@ -37,4 +39,19 @@ func compareToken(tokenString string) (*jwt.Token, error) {
 	return jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
 		return JWTKEY(), nil
 	})
+}
+
+func (jwt EtherealClaims) Verify(r *http.Request) (bool, error) {
+	headerBearer := r.Header.Get("Authorization")
+
+	if strings.HasPrefix(headerBearer, "Bearer") {
+		token := strings.Replace(headerBearer, "Bearer", "", 1)
+		token = strings.Trim(token, " ")
+
+		if t, err := compareToken(token); err != nil && !t.Valid {
+			return false, err
+		}
+		return true, nil
+	}
+	return false, errors.New("Missing heading Bearer")
 }
