@@ -4,8 +4,6 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
-	"github.com/agoalofalife/ethereal/utils"
-	"github.com/dgrijalva/jwt-go"
 	"github.com/graphql-go/graphql"
 	"github.com/graphql-go/handler"
 	"github.com/jinzhu/gorm"
@@ -15,6 +13,8 @@ import (
 	"net/http"
 	"os"
 	"path"
+	"github.com/dgrijalva/jwt-go"
+	"github.com/agoalofalife/ethereal/utils"
 	"runtime"
 )
 
@@ -102,7 +102,7 @@ func Start() {
 		if GetCnf("AUTH.JWT_TOKEN").(string) == "global" {
 			http.HandleFunc("auth0/login", func(w http.ResponseWriter, r *http.Request) {
 				var user User
-
+				fmt.Println("test")
 				login := r.FormValue("login")
 				password := r.FormValue("password")
 
