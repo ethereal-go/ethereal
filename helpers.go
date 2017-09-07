@@ -14,7 +14,8 @@ import (
 /**
 / Get configuration value
 */
-func config(name string, byDefault ...interface{}) interface{} {
+
+func GetCnf(name string, byDefault ...interface{}) interface{} {
 	var temp string
 	if temp = os.Getenv(name); temp == "" {
 		if temp = viper.GetString(strings.ToLower(name)); temp == "" {
@@ -27,12 +28,12 @@ func config(name string, byDefault ...interface{}) interface{} {
 /**
 / Add value in Context structure
 */
-func ctxStruct(app *Application, value interface{}) context.Context {
+func CtxStruct(app *Application, value interface{}) context.Context {
 	app.Context = context.WithValue(App.Context, getType(value), value)
 	return app.Context
 }
 
-func ctx(app *Application, key interface{}, value interface{}) context.Context {
+func Ctx(app *Application, key interface{}, value interface{}) context.Context {
 	app.Context = context.WithValue(App.Context, key, value)
 	return app.Context
 }

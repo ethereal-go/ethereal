@@ -26,7 +26,7 @@ func (m *Middleware) AddMiddleware(middleware ...AddMiddleware) {
 }
 
 // Method loading middleware for application
-func (m *Middleware) LoadApplication(application *Application) []alice.Constructor {
+func (m Middleware) LoadApplication(application *Application) []alice.Constructor {
 	for _, middleware := range m.allMiddleware {
 		middleware.Add(&m.includeMiddleware, application)
 	}
@@ -36,17 +36,17 @@ func (m *Middleware) LoadApplication(application *Application) []alice.Construct
 /**
 / ability to set jwt token all queries or choose query
 */
-type middlewareJWTToken struct {
+type MiddlewareJWTToken struct {
 	jwt            EtherealClaims
-	statusError    int
-	responseError  string
+	StatusError    int
+	ResponseError  string
 	authenticated  bool
 	responseWriter http.ResponseWriter
 	included       bool // flag is enabled or disabled authJwtToken
 }
 
-func (m middlewareJWTToken) Add(where *[]alice.Constructor, application *Application) {
-	confToken := config("AUTH.JWT_TOKEN").(string)
+func (m MiddlewareJWTToken) Add(where *[]alice.Constructor, application *Application) {
+	confToken := GetCnf("AUTH.JWT_TOKEN").(string)
 
 	if confToken == "local" {
 		m.included = true
@@ -54,11 +54,11 @@ func (m middlewareJWTToken) Add(where *[]alice.Constructor, application *Applica
 			return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 				m.responseWriter = w
 				if check, err := m.jwt.Verify(r); !check {
-					m.responseError = handlerErrorToken(err).Error()
+					m.ResponseError = handlerErrorToken(err).Error()
 				} else {
 					m.authenticated = true
 				}
-				ctxStruct(application, m)
+				CtxStruct(application, m)
 				handler.ServeHTTP(w, r)
 			})
 		})
@@ -68,7 +68,7 @@ func (m middlewareJWTToken) Add(where *[]alice.Constructor, application *Applica
 			return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 				if check, err := m.jwt.Verify(r); !check {
 					json.NewEncoder(w).Encode(handlerErrorToken(err).Error())
-					w.WriteHeader(m.statusError)
+					w.WriteHeader(m.StatusError)
 				}
 			})
 		})

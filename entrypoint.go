@@ -34,8 +34,8 @@ type Application struct {
 func Start() {
 	// Config variables
 	var (
-		debug string = config("GRAPHQL.DEBUG").(string)
-		host  string = config("HOST.PORT").(string)
+		debug string = GetCnf("GRAPHQL.DEBUG").(string)
+		host  string = GetCnf("HOST.PORT").(string)
 	)
 
 	// First we have to determine the mode of operation
@@ -53,7 +53,7 @@ func Start() {
 	}
 
 	// link itself
-	ctxStruct(&App, App)
+	CtxStruct(&App, App)
 	App.Middleware.LoadApplication(&App)
 
 	//root mutation
@@ -99,7 +99,7 @@ func Start() {
 		// here can add middleware
 		http.Handle("/graphql", alice.New(App.Middleware.includeMiddleware...).Then(h))
 
-		if config("AUTH.JWT_TOKEN").(string) == "global" {
+		if GetCnf("AUTH.JWT_TOKEN").(string) == "global" {
 			http.HandleFunc("auth0/login", func(w http.ResponseWriter, r *http.Request) {
 				var user User
 

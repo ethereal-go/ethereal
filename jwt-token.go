@@ -13,12 +13,12 @@ type EtherealClaims struct {
 
 // get key jwt
 func JWTKEY() []byte {
-	return []byte(config("AUTH.JWT_KEY_HMAC").(string))
+	return []byte(GetCnf("AUTH.JWT_KEY_HMAC").(string))
 }
 
 // handler check error
 func handlerErrorToken(err error) (message error) {
-	var locale =  config("L18N.LOCALE").(string)
+	var locale =  GetCnf("L18N.LOCALE").(string)
 
 	if ve, ok := err.(*jwt.ValidationError); ok {
 		if ve.Errors&jwt.ValidationErrorMalformed != 0 {

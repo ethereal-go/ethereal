@@ -8,9 +8,9 @@ import (
 func Database() *gorm.DB {
 	// configuration parameters
 	var (
-		login    string = config("DATABASE.LOGIN").(string)
-		password string = config("DATABASE.PASSWORD").(string)
-		database string = config("DATABASE.NAME").(string)
+		login    string = GetCnf("DATABASE.LOGIN").(string)
+		password string = GetCnf("DATABASE.PASSWORD").(string)
+		database string = GetCnf("DATABASE.NAME").(string)
 	)
 
 	db, err := gorm.Open("mysql", login+

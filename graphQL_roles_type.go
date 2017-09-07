@@ -9,26 +9,26 @@ var roleType = graphql.NewObject(graphql.ObjectConfig{
 	Fields: graphql.Fields{
 		"id": &graphql.Field{
 			Type:        graphql.String,
-			Description: string(ConstructorI18N().T(config("L18N.LOCALE").(string), "graphQL.RoleType.id")),
+			Description: string(ConstructorI18N().T(GetCnf("L18N.LOCALE").(string), "graphQL.RoleType.id")),
 		},
 		"name": &graphql.Field{
 			Type:        graphql.String,
-			Description: string(ConstructorI18N().T(config("L18N.LOCALE").(string), "graphQL.RoleType.name")),
+			Description: string(ConstructorI18N().T(GetCnf("L18N.LOCALE").(string), "graphQL.RoleType.name")),
 		},
 		"display_name": &graphql.Field{
 			Type:        graphql.String,
-			Description: string(ConstructorI18N().T(config("L18N.LOCALE").(string), "graphQL.RoleType.display_name")),
+			Description: string(ConstructorI18N().T(GetCnf("L18N.LOCALE").(string), "graphQL.RoleType.display_name")),
 		},
 		"description": &graphql.Field{
 			Type:        graphql.String,
-			Description: string(ConstructorI18N().T(config("L18N.LOCALE").(string), "graphQL.RoleType.description")),
+			Description: string(ConstructorI18N().T(GetCnf("L18N.LOCALE").(string), "graphQL.RoleType.description")),
 		},
 	},
 })
 
 var RoleField = graphql.Field{
 	Type:        graphql.NewList(roleType),
-	Description: string(ConstructorI18N().T(config("L18N.LOCALE").(string), "graphQL.Role.Description")),
+	Description: string(ConstructorI18N().T(GetCnf("L18N.LOCALE").(string), "graphQL.Role.Description")),
 	Args: graphql.FieldConfigArgument{
 		"id": &graphql.ArgumentConfig{
 			Type: graphql.String,

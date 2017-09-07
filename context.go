@@ -14,8 +14,8 @@ import (
 func AddContext(value ...interface{})  {
 	switch reflect.ValueOf(value[1]).Kind() {
 	case reflect.Struct:
-		ctxStruct(value[0].(*Application), value[1])
+		CtxStruct(value[0].(*Application), value[1])
 	default:
-		ctx(value[0].(*Application), value[1], value[2])
+		Ctx(value[0].(*Application), value[1], value[2])
 	}
 }
