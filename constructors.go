@@ -68,7 +68,7 @@ func Queries() GraphQlQueries {
 
 // Function add default field mutation
 func startMutations() map[string]*graphql.Field {
-	Mutations().Add("createUser", &createUser).Add("token", &createJWTToken)
+	Mutations().Add("createUser", &createUser)
 	return mutations
 }
 

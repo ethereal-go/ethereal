@@ -11,7 +11,7 @@
     "password":""
   },
   "auth":{
-    "jwt-token":false,
+    "jwt_token":"global",
     "jwt_KEY_HMAC" : ""
   },
   "l18n" :{

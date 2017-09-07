@@ -25,7 +25,7 @@ var jwtType = graphql.NewObject(graphql.ObjectConfig{
 /**
 / Create Token
 */
-var createJWTToken = graphql.Field{
+var CreateJWTToken = graphql.Field{
 	Type:        jwtType,
 	Description: "Create new jwt-token",
 	Args: graphql.FieldConfigArgument{
@@ -66,13 +66,13 @@ var createJWTToken = graphql.Field{
 	},
 }
 
-var authToken, _ = graphql.NewSchema(graphql.SchemaConfig{
+var AuthToken, _ = graphql.NewSchema(graphql.SchemaConfig{
 	Mutation: authMutation,
 })
 
 var authMutation = graphql.NewObject(graphql.ObjectConfig{
 	Name: "AuthMutation",
 	Fields: graphql.Fields{
-		"createJWTToken": &createJWTToken,
+		"createJWTToken": &CreateJWTToken,
 	},
 })
