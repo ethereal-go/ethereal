@@ -1,6 +1,7 @@
 package ethereal
 
 import (
+	"errors"
 	"github.com/agoalofalife/ethereal/utils"
 	"github.com/graphql-go/graphql"
 	"golang.org/x/crypto/bcrypt"
@@ -83,6 +84,9 @@ var UserField = graphql.Field{
 		},
 	},
 	Resolve: func(params graphql.ResolveParams) (interface{}, error) {
+		jwtAuth := params.Context.Value("middlewareJWTToken").(middlewareJWTToken)
+
+		if jwtAuth.authenticated {
 			var users []*User
 			App.Db.Find(&users)
 
@@ -106,5 +110,8 @@ var UserField = graphql.Field{
 			}
 
 			return users, nil
+		}
+
+		return nil, errors.New("sfs")
 	},
 }
