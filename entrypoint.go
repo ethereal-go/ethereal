@@ -4,6 +4,8 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"github.com/agoalofalife/ethereal/utils"
+	"github.com/dgrijalva/jwt-go"
 	"github.com/graphql-go/graphql"
 	"github.com/graphql-go/handler"
 	"github.com/jinzhu/gorm"
@@ -48,10 +50,10 @@ func Start() {
 		GraphQlQuery:    startQueries(),
 		GraphQlMutation: startMutations(),
 		Context:         context.Background(),
-		//Context:         ctxStruct(&App, App),
 		Config:          ConstructorConfig(),
 	}
-
+	// link itself
+	ctxStruct(&App, App)
 	App.Middleware.LoadApplication(&App)
 
 	//root mutation
@@ -97,19 +99,30 @@ func Start() {
 		// here can add middleware
 		http.Handle("/graphql", alice.New(App.Middleware.includeMiddleware...).Then(h))
 
-		//http.HandleFunc("/auth0/login", func(w http.ResponseWriter, r *http.Request) {
-		//	claims := EtherealClaims{
-		//		jwt.StandardClaims{
-		//			ExpiresAt: 15000,
-		//			Issuer:    "test",
-		//		},
-		//	}
-		//	// TODO add choose crypt via configuration!
-		//	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-		//
-		//	tokenString, err := token.SignedString(JWTKEY())
-		//	fmt.Println(tokenString, err)
-		//})
+		if config("AUTH.JWT_TOKEN").(string) == "global" {
+			http.HandleFunc("auth0/login", func(w http.ResponseWriter, r *http.Request) {
+				var user User
+
+				login := r.FormValue("login")
+				password := r.FormValue("password")
+
+				App.Db.Where("email = ?", login).First(&user)
+
+				if utils.CompareHashPassword([]byte(user.Password), []byte(password)) {
+					claims := EtherealClaims{
+						jwt.StandardClaims{
+							ExpiresAt: 1,
+							Issuer:    user.Email,
+						},
+					}
+					// TODO add choose crypt via configuration!
+					token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+
+					generateToken, _ := token.SignedString(JWTKEY())
+					w.Write([]byte(generateToken))
+				}
+			})
+		}
 
 		// Serve static files, if variable env debug in true.
 		if debug == "true" {
@@ -119,6 +132,6 @@ func Start() {
 		}
 
 		fmt.Println("Now server is running on port " + host)
-		http.ListenAndServe(":" + host, nil)
+		http.ListenAndServe(":"+host, nil)
 	}
 }

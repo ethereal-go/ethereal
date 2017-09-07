@@ -70,11 +70,8 @@ func (m middlewareJWTToken) Add(where *[]alice.Constructor, application *Applica
 				fmt.Println("working")
 				if check, err := m.jwt.Verify(r); !check {
 					json.NewEncoder(w).Encode(handlerErrorToken(err).Error())
-				} else {
-					json.NewEncoder(w).Encode(http.StatusText(m.statusError))
+					w.WriteHeader(m.statusError)
 				}
-				w.WriteHeader(m.statusError)
-				handler.ServeHTTP(w, r)
 			})
 		})
 	} else {
