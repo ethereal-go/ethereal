@@ -6,6 +6,7 @@ import (
 	"net/http"
 )
 
+
 /**
 / Add middleware in App under certain condition..
 */
@@ -20,7 +21,7 @@ type Middleware struct {
 	includeMiddleware []alice.Constructor
 }
 
-func (m Middleware) AddMiddleware(middleware ...AddMiddleware) {
+func (m *Middleware) AddMiddleware(middleware ...AddMiddleware) {
 	m.allMiddleware = append(m.allMiddleware, middleware...)
 }
 

@@ -42,7 +42,6 @@ func Start() {
 	// - cli console
 	// - api server
 	// Secondly, we must determine the sequence of actions
-
 	App = Application{
 		Db:              ConstructorDb(),
 		I18n:            ConstructorI18N(),
@@ -52,6 +51,7 @@ func Start() {
 		Context:         context.Background(),
 		Config:          ConstructorConfig(),
 	}
+
 	// link itself
 	ctxStruct(&App, App)
 	App.Middleware.LoadApplication(&App)
