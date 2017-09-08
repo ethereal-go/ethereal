@@ -5,7 +5,6 @@ import (
 	"github.com/joho/godotenv"
 	"github.com/spf13/viper"
 	"log"
-	"os"
 	"path/filepath"
 )
 
@@ -19,10 +18,7 @@ func (c Config) LoadConfigFromApp() {
 	var err error
 	c.FileName = "app.json"
 
-	workPath, err := os.Getwd()
-	if err != nil {
-		panic(err)
-	}
+	workPath := BasePathClient()
 	c.BasePath = append(c.BasePath, filepath.Join(workPath, "config"), workPath)
 
 	viper.SetConfigName("app")

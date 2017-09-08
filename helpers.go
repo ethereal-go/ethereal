@@ -48,3 +48,11 @@ func getType(unknown interface{}) string {
 		return t.Name()
 	}
 }
+
+func BasePathClient() string {
+	workPath, err := os.Getwd()
+	if err != nil {
+		panic(err)
+	}
+	return workPath
+}

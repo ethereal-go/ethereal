@@ -18,6 +18,8 @@ import (
 
 var App Application
 
+const runServer = "Now server is running on port "
+
 // Base structure
 type Application struct {
 	Db              *gorm.DB
@@ -39,6 +41,7 @@ func Start() {
 	// - cli console
 	// - api server
 	// Secondly, we must determine the sequence of actions
+
 	if len(os.Args) > 1 {
 		CliRun()
 	} else {
@@ -97,7 +100,7 @@ func Start() {
 			http.Handle("/", fs)
 		}
 
-		fmt.Println("Now server is running on port " + host)
+		fmt.Println(runServer + host)
 		http.ListenAndServe(":"+host, nil)
 	}
 }
