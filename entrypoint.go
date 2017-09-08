@@ -13,8 +13,6 @@ import (
 	"net/http"
 	"os"
 	"path"
-	"github.com/dgrijalva/jwt-go"
-	"github.com/agoalofalife/ethereal/utils"
 	"runtime"
 )
 
@@ -99,32 +97,6 @@ func Start() {
 		// here can add middleware
 		http.Handle("/graphql", alice.New(App.Middleware.includeMiddleware...).Then(h))
 
-		if GetCnf("AUTH.JWT_TOKEN").(string) == "global" {
-			http.HandleFunc("auth0/login", func(w http.ResponseWriter, r *http.Request) {
-				var user User
-				fmt.Println("test")
-				login := r.FormValue("login")
-				password := r.FormValue("password")
-
-				App.Db.Where("email = ?", login).First(&user)
-
-				if utils.CompareHashPassword([]byte(user.Password), []byte(password)) {
-					claims := EtherealClaims{
-						jwt.StandardClaims{
-							ExpiresAt: 1,
-							Issuer:    user.Email,
-						},
-					}
-					// TODO add choose crypt via configuration!
-					token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
-
-					generateToken, _ := token.SignedString(JWTKEY())
-					w.Write([]byte(generateToken))
-				}
-			})
-		}
-
-		// Serve static files, if variable env debug in true.
 		if debug == "true" {
 			_, filename, _, _ := runtime.Caller(0)
 			fs := http.FileServer(http.Dir(path.Dir(filename) + "/static"))

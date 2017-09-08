@@ -31,9 +31,9 @@ func I18nGraphQL() (graphQL graphQLI18n) {
 				"graphQL.RoleType.display_name": "Display name role.",
 				"graphQL.RoleType.description":  "Description role.",
 
-				"jwtToken.ValidationErrorMalformed" :"That's not even a token",
-				"jwtToken.ValidationErrorExpired" :"Timing is everything",
-				"jwtToken.ErrorBase" :"Couldn't handle this token ",
+				"jwtToken.ValidationErrorMalformed": "That's not even a token",
+				"jwtToken.ValidationErrorExpired":   "Timing is everything",
+				"jwtToken.ErrorBase":                "Couldn't handle this token ",
 			},
 			"ru-RU": map[string]string{
 				"graphQL.User.Description":  "Список пользователей вашего приложения.",
@@ -49,9 +49,9 @@ func I18nGraphQL() (graphQL graphQLI18n) {
 				"graphQL.RoleType.display_name": "Имя роли для отображения.",
 				"graphQL.RoleType.description":  "Подробное описание роли.",
 
-				"jwtToken.ValidationErrorMalformed" :"Это не похоже на токен",
-				"jwtToken.ValidationErrorExpired" :"Время истекло",
-				"jwtToken.ErrorBase" :"Не удалось обрабоать этот токен ",
+				"jwtToken.ValidationErrorMalformed": "Это не похоже на токен",
+				"jwtToken.ValidationErrorExpired":   "Время истекло",
+				"jwtToken.ErrorBase":                "Не удалось обрабоать этот токен ",
 			},
 		},
 	}
@@ -91,7 +91,7 @@ func mapLanguage() map[string]string {
 	}
 }
 
-// temp functions determines type locale
+// temp functions determines type locale from header http request
 func parserLocale(header []string) string {
 	splitSign := strings.Split(header[0], ";")
 	for _, multiLocal := range splitSign {

@@ -10,7 +10,6 @@ import (
 // Here all constructors application, which return some structure...
 
 func ConstructorI18N() *i18n.I18n {
-	//fmt.Println(app)
 	if App.I18n == nil {
 		App.I18n = i18n.New(
 			database.New(ConstructorDb()),
