@@ -30,13 +30,7 @@ func ConstructorDb() *gorm.DB {
 func ConstructorMiddleware() *Middleware {
 	if App.Middleware == nil {
 		App.Middleware = &Middleware{
-			allMiddleware: []AddMiddleware{
-				//list standard middleware
-				//middlewareJWTToken{
-				//	responseError: http.StatusText(http.StatusNetworkAuthenticationRequired),
-				//	statusError:   http.StatusNetworkAuthenticationRequired,
-				//},
-			},
+			allMiddleware: []AddMiddleware{},
 		}
 	}
 	return App.Middleware
