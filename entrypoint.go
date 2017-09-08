@@ -35,14 +35,14 @@ func Start() {
 		debug string = GetCnf("GRAPHQL.DEBUG").(string)
 		host  string = GetCnf("HOST.PORT").(string)
 	)
-
+	// First we have to determine the mode of operation
+	// - cli console
+	// - api server
+	// Secondly, we must determine the sequence of actions
 	if len(os.Args) > 1 {
 		CliRun()
 	} else {
-		// First we have to determine the mode of operation
-		// - cli console
-		// - api server
-		// Secondly, we must determine the sequence of actions
+
 		App = Application{
 			Db:              ConstructorDb(),
 			I18n:            ConstructorI18N(),
