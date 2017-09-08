@@ -1,7 +1,6 @@
 package ethereal
 
 import (
-	"encoding/json"
 	"github.com/justinas/alice"
 	"net/http"
 )

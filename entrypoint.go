@@ -36,48 +36,42 @@ func Start() {
 		host  string = GetCnf("HOST.PORT").(string)
 	)
 
-	// First we have to determine the mode of operation
-	// - cli console
-	// - api server
-	// Secondly, we must determine the sequence of actions
-	App = Application{
-		Db:              ConstructorDb(),
-		I18n:            ConstructorI18N(),
-		Middleware:      ConstructorMiddleware(),
-		GraphQlQuery:    startQueries(),
-		GraphQlMutation: startMutations(),
-		Context:         context.Background(),
-		Config:          ConstructorConfig(),
-	}
-
-	// link itself
-	CtxStruct(&App, App)
-	App.Middleware.LoadApplication(&App)
-
-	//root mutation
-	var rootMutation = graphql.NewObject(graphql.ObjectConfig{
-		Name:   "RootMutation",
-		Fields: App.GraphQlMutation,
-	})
-
-	// root query
-	var rootQuery = graphql.NewObject(graphql.ObjectConfig{
-		Name:   "RootQuery",
-		Fields: App.GraphQlQuery,
-	})
-
-	// define schema, with our rootQuery and rootMutation
-	var schema, _ = graphql.NewSchema(graphql.SchemaConfig{
-		Query:    rootQuery,
-		Mutation: rootMutation,
-	})
-
-	I18nGraphQL().Fill()
-
 	if len(os.Args) > 1 {
 		CliRun()
 	} else {
+		// First we have to determine the mode of operation
+		// - cli console
+		// - api server
+		// Secondly, we must determine the sequence of actions
+		App = Application{
+			Db:              ConstructorDb(),
+			I18n:            ConstructorI18N(),
+			Middleware:      ConstructorMiddleware(),
+			GraphQlQuery:    startQueries(),
+			GraphQlMutation: startMutations(),
+			Context:         context.Background(),
+			Config:          ConstructorConfig(),
+		}
+		// link itself
+		CtxStruct(&App, App)
+		App.Middleware.LoadApplication(&App)
+		//root mutation
+		var rootMutation = graphql.NewObject(graphql.ObjectConfig{
+			Name:   "RootMutation",
+			Fields: App.GraphQlMutation,
+		})
 
+		// root query
+		var rootQuery = graphql.NewObject(graphql.ObjectConfig{
+			Name:   "RootQuery",
+			Fields: App.GraphQlQuery,
+		})
+
+		// define schema, with our rootQuery and rootMutation
+		var schema, _ = graphql.NewSchema(graphql.SchemaConfig{
+			Query:    rootQuery,
+			Mutation: rootMutation,
+		})
 		h := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			opts := handler.NewRequestOptions(r)
 			result := graphql.Do(graphql.Params{

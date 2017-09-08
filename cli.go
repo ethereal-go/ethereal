@@ -3,11 +3,14 @@ package ethereal
 import (
 	"flag"
 	"log"
+	"fmt"
 )
 
 func CliRun() {
 	database := flag.String("database", "migrate", "action database")
 	seed := flag.String("seed", "up", "action seeder")
+	locale := flag.String("locale", "fill", "fill locale")
+
 	flag.Parse()
 
 	switch *database {
@@ -27,6 +30,12 @@ func CliRun() {
 		role := Role{Name: "User", DisplayName: "User", Description: "Simple user"}
 		user := User{Email: "", Name: "", Password: "", Role: role}
 		App.Db.Save(&user)
+	}
+
+	switch *locale {
+	case "fill":
+		I18nGraphQL().Fill()
+		fmt.Println("Success fill locale in database! Good job!")
 	}
 }
 
