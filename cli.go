@@ -20,6 +20,7 @@ func CliRun() {
 ║╚══╗   ║║   ║║║║ ║╚══╗ ║║║║  ║╚══╗ ║║║║ ║╚═╗
 ╚═══╝   ╚╝   ╚╝╚╝ ╚═══╝ ╚╝╚╝  ╚═══╝ ╚╝╚╝ ╚══╝
 	`)
+
 	switch *database {
 	case "migrate":
 		App.Db.AutoMigrate(tables()...)
