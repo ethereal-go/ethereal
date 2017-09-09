@@ -14,7 +14,6 @@ import (
 	"os"
 	"path"
 	"runtime"
-	"github.com/ethereal-go/ethereal/commands"
 )
 
 var App Application
@@ -45,7 +44,7 @@ func Start() {
 
 	if len(os.Args) > 1 {
 		//CliRun()
-		commands.Execute()
+		CliExecute()
 	} else {
 
 		App = Application{

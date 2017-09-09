@@ -1,11 +1,12 @@
-package commands
+package ethereal
 
 import (
-	"github.com/spf13/cobra"
-	"fmt"
-	"os"
-	"github.com/spf13/viper"
-	"github.com/mitchellh/go-homedir"
+"github.com/spf13/cobra"
+"fmt"
+"os"
+"github.com/ethereal-go/ethereal/commands"
+"github.com/spf13/viper"
+"github.com/mitchellh/go-homedir"
 )
 
 var cfgFile string
@@ -14,13 +15,20 @@ var cfgFile string
 var RootCmd = &cobra.Command{
 	Use:   "cli",
 	Short: "CLI your application",
-	Long: ``,
+	Long:`
+╔═══╗ ╔════╗ ╔╗╔╗ ╔═══╗ ╔═══╗ ╔═══╗ ╔══╗ ╔╗
+║╔══╝ ╚═╗╔═╝ ║║║║ ║╔══╝ ║╔═╗║ ║╔══╝ ║╔╗║ ║║
+║╚══╗   ║║   ║╚╝║ ║╚══╗ ║╚═╝║ ║╚══╗ ║╚╝║ ║║
+║╔══╝   ║║   ║╔╗║ ║╔══╝ ║╔╗╔╝ ║╔══╝ ║╔╗║ ║║
+║╚══╗   ║║   ║║║║ ║╚══╗ ║║║║  ║╚══╗ ║║║║ ║╚═╗
+╚═══╝   ╚╝   ╚╝╚╝ ╚═══╝ ╚╝╚╝  ╚═══╝ ╚╝╚╝ ╚══╝
+	`,
 	//	Run: func(cmd *cobra.Command, args []string) { },
 }
 
 // Execute adds all child commands to the root command and sets flags appropriately.
 // This is called by main.main(). It only needs to happen once to the rootCmd.
-func Execute() {
+func CliExecute() {
 	if err := RootCmd.Execute(); err != nil {
 		fmt.Println(err)
 		os.Exit(1)
@@ -35,9 +43,8 @@ func init() {
 	// will be global for your application.
 	RootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.seeCobraTest.yaml)")
 
-	// Cobra also supports local flags, which will only run
-	// when this action is called directly.
-	RootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	RootCmd.AddCommand(commands.CmdLocale)
+	//RootCmd.AddCommand(commands.CmdSeed)
 }
 
 // initConfig reads in config file and ENV variables if set.
