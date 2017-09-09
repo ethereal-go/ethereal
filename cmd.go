@@ -4,7 +4,6 @@ import (
 "github.com/spf13/cobra"
 "fmt"
 "os"
-"github.com/ethereal-go/ethereal/commands"
 "github.com/spf13/viper"
 "github.com/mitchellh/go-homedir"
 )
@@ -43,8 +42,8 @@ func init() {
 	// will be global for your application.
 	RootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $HOME/.seeCobraTest.yaml)")
 
-	RootCmd.AddCommand(commands.CmdLocale)
-	//RootCmd.AddCommand(commands.CmdSeed)
+	RootCmd.AddCommand(cmdLocale)
+	RootCmd.AddCommand(cmdSeed)
 }
 
 // initConfig reads in config file and ENV variables if set.
