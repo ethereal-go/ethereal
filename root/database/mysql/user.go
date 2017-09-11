@@ -2,7 +2,7 @@ package mysql
 
 import (
 	"github.com/jinzhu/gorm"
-	"github.com/ethereal-go/ethereal/database"
+	"github.com/ethereal-go/ethereal/root/database"
 )
 
 type UserService struct {
