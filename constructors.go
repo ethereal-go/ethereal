@@ -6,6 +6,7 @@ import (
 	"github.com/graphql-go/graphql"
 	"github.com/jinzhu/gorm"
 	"github.com/qor/i18n"
+	"github.com/ethereal-go/ethereal/root/middleware"
 	"github.com/qor/i18n/backends/database"
 )
 
@@ -29,14 +30,12 @@ func ConstructorDb() *gorm.DB {
 
 }
 
-//func ConstructorMiddleware() *Middleware {
-//	if App.Middleware == nil {
-//		App.Middleware = &Middleware{
-//			allMiddleware: []AddMiddleware{},
-//		}
-//	}
-//	return App.Middleware
-//}
+func ConstructorMiddleware() *middleware.Middleware {
+	if Middleware == nil {
+		Middleware = &middleware.Middleware{}
+	}
+	return Middleware
+}
 
 func ConstructorConfig() config.Configurable {
 	if App.Config == nil {

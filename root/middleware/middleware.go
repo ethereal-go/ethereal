@@ -21,6 +21,10 @@ type Middleware struct {
 
 }
 
+func (m *Middleware) AddMiddleware(middleware ...AddMiddleware) {
+	m.AllMiddleware = append(m.AllMiddleware, middleware...)
+}
+
 // Method loading middleware for application
 func (m Middleware) LoadApplication(application *app.Application) []alice.Constructor {
 	for _, middleware := range m.AllMiddleware {

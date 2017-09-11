@@ -15,6 +15,7 @@ import (
 )
 
 var App app.Application
+var Middleware *middleware.Middleware
 
 const runServer = "Now server is running on port "
 
@@ -46,7 +47,7 @@ func Start() {
 	}
 	// link itself
 	CtxStruct(&App, App)
-	mid := middleware.Middleware{}
+	mid := ConstructorMiddleware()
 	mid.LoadApplication(&App)
 
 	//root mutation
