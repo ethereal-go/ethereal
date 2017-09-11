@@ -42,7 +42,7 @@ func CliRun() {
 
 	switch *locale {
 	case "fill":
-		I18nGraphQL().Fill()
+		//I18nGraphQL().Fill()
 		fmt.Println("Success fill locale in database! Good job!")
 	}
 }

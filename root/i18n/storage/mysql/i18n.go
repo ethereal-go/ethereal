@@ -13,7 +13,7 @@ type LocaleStorageMysql struct {
 	I18n *i18n.I18n
 }
 
-func (l LocaleStorageMysql) EstablishConnection(config interface{}) {
+func (l LocaleStorageMysql) EstablishConnection(config interface{}) localeI18n.FillLocale {
 	user  := config.(map[string]string)["user"]
 	password  := config.(map[string]string)["password"]
 	dbName  := config.(map[string]string)["dbname"]
