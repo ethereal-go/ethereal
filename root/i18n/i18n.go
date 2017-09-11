@@ -1,8 +1,14 @@
 package i18n
 
-type Locale interface {
-	Fill()
-	Merge(map[string]map[string]string) Locale
+type FillLocale interface {
+	Add(StorageLocale)
+	Merge(map[string]map[string]string, StorageLocale) FillLocale
 }
 
+type Locale interface {
+	Get(key string) interface{}
+}
 
+type StorageLocale struct {
+	Structure map[string]map[string]string
+}
