@@ -1,7 +1,7 @@
 package ethereal
 
 import (
-	"github.com/agoalofalife/ethereal/utils"
+	"github.com/ethereal-go/ethereal/utils"
 	"github.com/graphql-go/graphql"
 	"golang.org/x/crypto/bcrypt"
 	"strconv"
