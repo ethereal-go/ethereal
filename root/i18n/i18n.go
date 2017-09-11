@@ -9,7 +9,7 @@ type FillLocale interface {
 }
 
 type Locale interface {
-	Get(conf config.Config, key string) interface{}
+	Get(conf config.Configurable, key string) interface{}
 }
 
 type StorageLocale struct {
