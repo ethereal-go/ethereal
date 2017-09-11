@@ -47,8 +47,8 @@ func Start() {
 	}
 	// link itself
 	CtxStruct(&App, App)
-	middleware := middleware.Middleware{}
-	middleware.LoadApplication(&App)
+	mid := middleware.Middleware{}
+	mid.LoadApplication(&App)
 
 	//root mutation
 	var rootMutation = graphql.NewObject(graphql.ObjectConfig{
@@ -85,7 +85,7 @@ func Start() {
 	})
 
 	// here can add middleware
-	http.Handle("/graphql", middleware.GetHandler(h))
+	http.Handle("/graphql", mid.GetHandler(h))
 
 	if debug == "true" {
 		_, filename, _, _ := runtime.Caller(0)

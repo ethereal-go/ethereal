@@ -1,28 +1,39 @@
 package config
 
 import (
-	"path/filepath"
-	"github.com/spf13/viper"
 	"fmt"
+	"github.com/joho/godotenv"
+	"github.com/spf13/viper"
 	"log"
 	"os"
-	"github.com/joho/godotenv"
+	"path/filepath"
+	"strings"
 )
 
-type Config struct {
-	BasePath []string
-	FileName string
+const (
+	FileName = "app.json"
+	DirConf  = "config"
+)
+
+type Config interface {
+	Load()
+}
+type Configuration struct {
+	BasePath          []string
+	FileName          string
+	ExtensionFileName string
 }
 
 // Load configuration data set in application
-func (c Config) LoadConfigFromApp() {
+func (c Configuration) LoadConfigFromApp() {
 	var err error
-	c.FileName = "app.json"
+	s := strings.Split(FileName, ".")
+	c.FileName, c.ExtensionFileName = s[0], s[1]
 
 	workPath := BasePathClient()
-	c.BasePath = append(c.BasePath, filepath.Join(workPath, "config"), workPath)
+	c.BasePath = append(c.BasePath, filepath.Join(workPath, DirConf), workPath)
 
-	viper.SetConfigName("app")
+	viper.SetConfigName(c.FileName)
 	c.addAllPathsConfig(c.BasePath)
 
 	err = viper.ReadInConfig() // Find and read the config file
@@ -37,9 +48,9 @@ func (c Config) LoadConfigFromApp() {
 }
 
 /**
- / Set all paths possible in application
- */
-func (c Config) addAllPathsConfig(paths []string) {
+/ Set all paths possible in application
+*/
+func (c Configuration) addAllPathsConfig(paths []string) {
 	for _, path := range paths {
 		viper.AddConfigPath(path)
 	}

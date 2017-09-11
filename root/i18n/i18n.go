@@ -1,5 +1,7 @@
 package i18n
 
+import "github.com/ethereal-go/ethereal/root/config"
+
 type FillLocale interface {
 	EstablishConnection(configuration interface{}) FillLocale
 	Add(StorageLocale)
@@ -7,7 +9,7 @@ type FillLocale interface {
 }
 
 type Locale interface {
-	Get(key string) interface{}
+	Get(conf config.Config, key string) interface{}
 }
 
 type StorageLocale struct {
