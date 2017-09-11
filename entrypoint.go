@@ -12,7 +12,6 @@ import (
 	"runtime"
 	"github.com/ethereal-go/ethereal/root/middleware"
 	"github.com/ethereal-go/ethereal/root/app"
-	confJson "github.com/ethereal-go/ethereal/root/config/json"
 )
 
 var App app.Application
@@ -43,7 +42,7 @@ func Start() {
 		GraphQlQuery:    startQueries(),
 		GraphQlMutation: startMutations(),
 		Context:         context.Background(),
-		Config:          confJson.NewConfig(),
+		Config:          ConstructorConfig(),
 	}
 	// link itself
 	CtxStruct(&App, App)

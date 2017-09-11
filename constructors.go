@@ -1,6 +1,7 @@
 package ethereal
 
 import (
+	"github.com/ethereal-go/ethereal/root/config/json"
 	"github.com/ethereal-go/ethereal/root/config"
 	"github.com/graphql-go/graphql"
 	"github.com/jinzhu/gorm"
@@ -37,9 +38,9 @@ func ConstructorDb() *gorm.DB {
 //	return App.Middleware
 //}
 
-func ConstructorConfig() *config.Configuration {
+func ConstructorConfig() config.Configurable {
 	if App.Config == nil {
-		App.Config = &config.Configuration{}
+		App.Config = json.NewConfig()
 		App.Config.Load()
 	}
 	return App.Config
