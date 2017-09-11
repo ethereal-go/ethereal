@@ -35,7 +35,7 @@ func (l LocaleStorageMysql) Add(storage localeI18n.StorageLocale) {
 	}
 }
 
-//
+// TODO create json file and run ...
 //func I18nGraphQL() (graphQL graphQLI18n) {
 //	graphQL = graphQLI18n{
 //		structure: map[string]map[string]string{
