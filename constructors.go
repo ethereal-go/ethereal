@@ -1,11 +1,11 @@
 package ethereal
 
 import (
+	"github.com/ethereal-go/ethereal/root/config"
 	"github.com/graphql-go/graphql"
 	"github.com/jinzhu/gorm"
 	"github.com/qor/i18n"
 	"github.com/qor/i18n/backends/database"
-	"github.com/ethereal-go/ethereal/root/config"
 )
 
 // Here all constructors application, which return some structure...
@@ -37,10 +37,10 @@ func ConstructorDb() *gorm.DB {
 //	return App.Middleware
 //}
 
-func ConstructorConfig() *config.Config {
+func ConstructorConfig() *config.Configuration {
 	if App.Config == nil {
-		App.Config = &config.Config{}
-		App.Config.LoadConfigFromApp()
+		App.Config = &config.Configuration{}
+		App.Config.Load()
 	}
 	return App.Config
 }

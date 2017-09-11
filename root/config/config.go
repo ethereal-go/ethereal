@@ -25,7 +25,7 @@ type Configuration struct {
 }
 
 // Load configuration data set in application
-func (c Configuration) LoadConfigFromApp() {
+func (c Configuration) Load() {
 	var err error
 	s := strings.Split(FileName, ".")
 	c.FileName, c.ExtensionFileName = s[0], s[1]

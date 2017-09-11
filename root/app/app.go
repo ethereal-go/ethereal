@@ -17,5 +17,5 @@ type Application struct {
 	GraphQlMutation graphql.Fields
 	GraphQlQuery    graphql.Fields
 	Context         context.Context
-	Config          *config.Config
+	Config          *config.Configuration
 }

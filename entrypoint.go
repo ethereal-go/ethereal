@@ -43,7 +43,7 @@ func Start() {
 		GraphQlQuery:    startQueries(),
 		GraphQlMutation: startMutations(),
 		Context:         context.Background(),
-		Config:          &config.Config{},
+		Config:          &config.Configuration{},
 	}
 	// link itself
 	CtxStruct(&App, App)
