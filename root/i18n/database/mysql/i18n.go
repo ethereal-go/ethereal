@@ -4,18 +4,28 @@ import (
 	localeI18n "github.com/ethereal-go/ethereal/root/i18n"
 	"github.com/jinzhu/gorm"
 	"github.com/qor/i18n"
+	"github.com/qor/i18n/backends/database"
 	"strings"
 )
 
 type LocaleStorageMysql struct {
-	DB          *gorm.DB
-	I18nPackage *i18n.I18n
+	DB   *gorm.DB
+	I18n *i18n.I18n
+}
+
+func (l LocaleStorageMysql) EstablishConnection(config interface{}) {
+	user  := config.(map[string]string)["user"]
+	password  := config.(map[string]string)["password"]
+	dbName  := config.(map[string]string)["dbname"]
+
+	db, _ := gorm.Open("mysql", user + ":" + password+ "@/" + dbName + "?charset=utf8&parseTime=True&loc=Local")
+	l.I18n = i18n.New(database.New(db))
 }
 
 func (l LocaleStorageMysql) Add(i18n localeI18n.StorageLocale) {
 	for locale, mapValues := range i18n.Structure {
 		for key, value := range mapValues {
-			l.I18nPackage.SaveTranslation(&i18n.Translation{Key: key, Locale: locale, Value: value})
+			l.I18n.SaveTranslation(&i18n.Translation{Key: key, Locale: locale, Value: value})
 		}
 	}
 }

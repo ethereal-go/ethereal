@@ -1,6 +1,7 @@
 package i18n
 
 type FillLocale interface {
+	EstablishConnection(configuration interface{})
 	Add(StorageLocale)
 	Merge(map[string]map[string]string, StorageLocale) FillLocale
 }
