@@ -1,4 +1,4 @@
-package root
+package app
 
 import (
 	"github.com/jinzhu/gorm"

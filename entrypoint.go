@@ -6,29 +6,29 @@ import (
 	"fmt"
 	"github.com/graphql-go/graphql"
 	"github.com/graphql-go/handler"
-	"github.com/jinzhu/gorm"
-	"github.com/justinas/alice"
-	"github.com/qor/i18n"
 	"log"
 	"net/http"
 	"path"
 	"runtime"
+	"github.com/ethereal-go/ethereal/root/middleware"
+	"github.com/ethereal-go/ethereal/root/app"
+	"github.com/ethereal-go/ethereal/root/config"
 )
 
-var App Application
+//var App Application
 
 const runServer = "Now server is running on port "
 
 // Base structure
-type Application struct {
-	Db              *gorm.DB
-	I18n            *i18n.I18n
-	Middleware      *Middleware
-	GraphQlMutation graphql.Fields
-	GraphQlQuery    graphql.Fields
-	Context         context.Context
-	Config          *Config
-}
+//type Application struct {
+//	Db              *gorm.DB
+//	I18n            *i18n.I18n
+//	Middleware      *Middleware
+//	GraphQlMutation graphql.Fields
+//	GraphQlQuery    graphql.Fields
+//	Context         context.Context
+//	Config          *Config
+//}
 
 func Start() {
 	// Config variables
@@ -37,14 +37,16 @@ func Start() {
 		host  string = GetCnf("HOST.PORT").(string)
 	)
 
-	App = Application{
+	App := app.Application{
 		Db:              ConstructorDb(),
 		I18n:            ConstructorI18N(),
-		Middleware:      ConstructorMiddleware(),
+		Middleware:      &middleware.Middleware{
+
+		},
 		GraphQlQuery:    startQueries(),
 		GraphQlMutation: startMutations(),
 		Context:         context.Background(),
-		Config:          ConstructorConfig(),
+		Config:          &config.Config{},
 	}
 	// link itself
 	CtxStruct(&App, App)
@@ -85,7 +87,7 @@ func Start() {
 	})
 
 	// here can add middleware
-	http.Handle("/graphql", alice.New(App.Middleware.includeMiddleware...).Then(h))
+	http.Handle("/graphql", App.Middleware.GetHandler(h))
 
 	if debug == "true" {
 		_, filename, _, _ := runtime.Caller(0)
