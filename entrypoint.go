@@ -40,9 +40,6 @@ func Start() {
 	App := app.Application{
 		Db:              ConstructorDb(),
 		I18n:            ConstructorI18N(),
-		Middleware:      &middleware.Middleware{
-
-		},
 		GraphQlQuery:    startQueries(),
 		GraphQlMutation: startMutations(),
 		Context:         context.Background(),
@@ -50,7 +47,7 @@ func Start() {
 	}
 	// link itself
 	CtxStruct(&App, App)
-	App.Middleware.LoadApplication(&App)
+	middleware.Middleware.LoadApplication(&App)
 
 	//root mutation
 	var rootMutation = graphql.NewObject(graphql.ObjectConfig{
