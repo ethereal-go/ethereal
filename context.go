@@ -2,6 +2,7 @@ package ethereal
 
 import (
 	"reflect"
+	"github.com/ethereal-go/ethereal/root/app"
 )
 
 /**
@@ -14,8 +15,8 @@ import (
 func AddContext(value ...interface{})  {
 	switch reflect.ValueOf(value[1]).Kind() {
 	case reflect.Struct:
-		CtxStruct(value[0].(*Application), value[1])
+		CtxStruct(value[0].(*app.Application), value[1])
 	default:
-		Ctx(value[0].(*Application), value[1], value[2])
+		Ctx(value[0].(*app.Application), value[1], value[2])
 	}
 }

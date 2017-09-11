@@ -5,6 +5,7 @@ import (
 	"github.com/jinzhu/gorm"
 	"github.com/qor/i18n"
 	"github.com/qor/i18n/backends/database"
+	"github.com/ethereal-go/ethereal/root/config"
 )
 
 // Here all constructors application, which return some structure...
@@ -27,18 +28,18 @@ func ConstructorDb() *gorm.DB {
 
 }
 
-func ConstructorMiddleware() *Middleware {
-	if App.Middleware == nil {
-		App.Middleware = &Middleware{
-			allMiddleware: []AddMiddleware{},
-		}
-	}
-	return App.Middleware
-}
+//func ConstructorMiddleware() *Middleware {
+//	if App.Middleware == nil {
+//		App.Middleware = &Middleware{
+//			allMiddleware: []AddMiddleware{},
+//		}
+//	}
+//	return App.Middleware
+//}
 
-func ConstructorConfig() *Config {
+func ConstructorConfig() *config.Config {
 	if App.Config == nil {
-		App.Config = &Config{}
+		App.Config = &config.Config{}
 		App.Config.LoadConfigFromApp()
 	}
 	return App.Config

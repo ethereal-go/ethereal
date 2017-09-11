@@ -4,6 +4,7 @@ import (
 	"context"
 	"github.com/spf13/viper"
 	"os"
+	"github.com/ethereal-go/ethereal/root/app"
 	"reflect"
 	"strings"
 )
@@ -28,12 +29,12 @@ func GetCnf(name string, byDefault ...interface{}) interface{} {
 /**
 / Add value in Context structure
 */
-func CtxStruct(app *Application, value interface{}) context.Context {
+func CtxStruct(app *app.Application, value interface{}) context.Context {
 	app.Context = context.WithValue(App.Context, getType(value), value)
 	return app.Context
 }
 
-func Ctx(app *Application, key interface{}, value interface{}) context.Context {
+func Ctx(app *app.Application, key interface{}, value interface{}) context.Context {
 	app.Context = context.WithValue(App.Context, key, value)
 	return app.Context
 }
@@ -49,10 +50,10 @@ func getType(unknown interface{}) string {
 	}
 }
 
-func BasePathClient() string {
-	workPath, err := os.Getwd()
-	if err != nil {
-		panic(err)
-	}
-	return workPath
-}
+//func BasePathClient() string {
+//	workPath, err := os.Getwd()
+//	if err != nil {
+//		panic(err)
+//	}
+//	return workPath
+//}
