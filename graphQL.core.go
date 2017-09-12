@@ -11,12 +11,12 @@ type GraphQlQueries map[string]*graphql.Field
 /**
 / Methods add new field (query or mutations) in GraphQl{types}..
 */
-func (g GraphQlMutations) Add(name string, field *graphql.Field) GraphQlMutations {
+func (g GraphQlMutations) Add(name string, field *graphql.Field) map[string]*graphql.Field {
 	mutations[name] = field
 	return g
 }
 
-func (g GraphQlQueries) Add(name string, field *graphql.Field) GraphQlQueries {
+func (g GraphQlQueries) Add(name string, field *graphql.Field) map[string]*graphql.Field {
 	queries[name] = field
 	return g
 }

@@ -1,11 +1,16 @@
 package database
 
-import "github.com/jinzhu/gorm"
+import (
+	"time"
+)
+
 
 type Role struct {
-	gorm.Model
+	ID          uint   `json:"id";gorm:"primary_key"`
 	Name        string `json:"name"`
 	DisplayName string `json:"display_name"`
 	Description string `json:"password"`
+	CreatedAt   time.Time
+	UpdatedAt   time.Time
+	DeletedAt   *time.Time `sql:"index"`
 }
-

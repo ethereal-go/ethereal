@@ -1,8 +1,8 @@
 package database
 
 import (
-	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
+	"time"
 )
 
 type UserService interface {
@@ -13,12 +13,14 @@ type UserService interface {
 }
 
 type User struct {
-	gorm.Model
-	Email    string `json:"email";gorm:"type:unique_index"`
-	Name     string `json:"name"`
-	Password string `json:"password"`
-	Token    string `json:"token"`
-	Role     Role   `json:"role"`
-	RoleID   int    `gorm:"index"`
+	ID        uint   `json:"id";gorm:"primary_key"`
+	Email     string `json:"email";gorm:"type:unique_index"`
+	Name      string `json:"name"`
+	Password  string `json:"password"`
+	Token     string `json:"token"`
+	Role      Role   `json:"role"`
+	RoleID    int    `gorm:"index"`
+	CreatedAt time.Time
+	UpdatedAt time.Time
+	DeletedAt *time.Time `sql:"index"`
 }
-
