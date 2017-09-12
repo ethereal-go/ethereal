@@ -39,16 +39,16 @@ func Start() {
 	mid := ConstructorMiddleware()
 	mid.LoadApplication(&App)
 
-	//root mutation
-	var rootMutation = graphql.NewObject(graphql.ObjectConfig{
-		Name:   "RootMutation",
-		Fields: App.GraphQlMutation,
-	})
-
 	// root query
 	var rootQuery = graphql.NewObject(graphql.ObjectConfig{
 		Name:   "RootQuery",
 		Fields: App.GraphQlQuery,
+	})
+
+	//root mutation
+	var rootMutation = graphql.NewObject(graphql.ObjectConfig{
+		Name:   "RootMutation",
+		Fields: App.GraphQlMutation,
 	})
 
 	// define schema, with our rootQuery and rootMutation

@@ -1,12 +1,12 @@
 package ethereal
 
 import (
-	"github.com/ethereal-go/ethereal/root/config/json"
 	"github.com/ethereal-go/ethereal/root/config"
+	"github.com/ethereal-go/ethereal/root/config/json"
+	"github.com/ethereal-go/ethereal/root/middleware"
 	"github.com/graphql-go/graphql"
 	"github.com/jinzhu/gorm"
 	"github.com/qor/i18n"
-	"github.com/ethereal-go/ethereal/root/middleware"
 	"github.com/qor/i18n/backends/database"
 )
 
@@ -63,11 +63,9 @@ func Queries() GraphQlQueries {
 
 // Function add default field mutation
 func startMutations() map[string]*graphql.Field {
-	Mutations().Add("createUser", &createUser)
 	return mutations
 }
 
 func startQueries() map[string]*graphql.Field {
-	Queries().Add("users", &UserField).Add("role", &RoleField)
 	return queries
 }
