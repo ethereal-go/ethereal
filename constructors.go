@@ -12,6 +12,7 @@ import (
 
 // Here all constructors application, which return some structure...
 
+// TODO Hmmm, I think use Pipline all for serial download
 func ConstructorI18N() *i18n.I18n {
 	if App.I18n == nil {
 		App.I18n = i18n.New(
