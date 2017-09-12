@@ -1,15 +1,17 @@
 package ethereal
 
 import (
-	"github.com/graphql-go/graphql"
 	"fmt"
+	"github.com/ethereal-go/ethereal/root/app"
+	"github.com/graphql-go/graphql"
+	"strconv"
 )
 
 var roleType = graphql.NewObject(graphql.ObjectConfig{
 	Name: "Role",
 	Fields: graphql.Fields{
 		"id": &graphql.Field{
-			Type:        graphql.String,
+			Type:        graphql.ID,
 			Description: string(ConstructorI18N().T(GetCnf("L18N.LOCALE").(string), "graphQL.RoleType.id")),
 		},
 		"name": &graphql.Field{
@@ -36,18 +38,20 @@ var RoleField = graphql.Field{
 		},
 	},
 	Resolve: func(params graphql.ResolveParams) (interface{}, error) {
-			var roles []Role
-			App.Db.Find(&roles)
+		db := params.Context.Value("*Application").(*app.Application).Db
+		var roles []Role
+		db.Find(&roles)
 
-			idQuery, isOK := params.Args["id"].(string)
-			if isOK {
-				for _, role := range roles {
-					if string(role.ID) == idQuery {
-						return role, nil
-					}
+		idQuery, isOK := params.Args["id"].(string)
+
+		if isOK {
+			for _, role := range roles {
+				if strconv.FormatInt(int64(role.ID), 10) == idQuery {
+					return []Role{role}, nil
 				}
 			}
+		}
 		fmt.Println(roles[1].ID, roles[1].Name)
-			return roles, nil
+		return roles, nil
 	},
 }

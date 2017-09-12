@@ -4,14 +4,14 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"github.com/ethereal-go/ethereal/root/app"
+	"github.com/ethereal-go/ethereal/root/middleware"
 	"github.com/graphql-go/graphql"
 	"github.com/graphql-go/handler"
 	"log"
 	"net/http"
 	"path"
 	"runtime"
-	"github.com/ethereal-go/ethereal/root/middleware"
-	"github.com/ethereal-go/ethereal/root/app"
 )
 
 var App app.Application
@@ -36,7 +36,6 @@ func Start() {
 	}
 	// link itself
 	App.Context = CtxStruct(&App, &App)
-
 	mid := ConstructorMiddleware()
 	mid.LoadApplication(&App)
 
