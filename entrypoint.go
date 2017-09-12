@@ -70,6 +70,7 @@ func Start() {
 			log.Printf("wrong result, unexpected errors: %v", result.Errors)
 			return
 		}
+
 		json.NewEncoder(w).Encode(result)
 	})
 

@@ -3,6 +3,7 @@ package ethereal
 import (
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
+	"time"
 )
 
 func Database() *gorm.DB {
@@ -22,24 +23,25 @@ func Database() *gorm.DB {
 	return db
 }
 
-type EtherealModel struct{
-	ID        uint `json:"id";gorm:"primary_key"`
-	gorm.Model
-}
-
 type User struct {
-	EtherealModel
-	Email    string `json:"email";gorm:"type:unique_index"`
-	Name     string `json:"name"`
-	Password string `json:"password"`
-	Token    string `json:"token"`
-	Role     Role   `json:"role"`
-	RoleID   int    `gorm:"index"`
+	ID        uint   `json:"id";gorm:"primary_key"`
+	Email     string `json:"email";gorm:"type:unique_index"`
+	Name      string `json:"name"`
+	Password  string `json:"password"`
+	Token     string `json:"token"`
+	Role      Role   `json:"role"`
+	RoleID    int    `gorm:"index"`
+	CreatedAt time.Time
+	UpdatedAt time.Time
+	DeletedAt *time.Time `sql:"index"`
 }
 
 type Role struct {
-	EtherealModel
+	ID          uint   `json:"id";gorm:"primary_key"`
 	Name        string `json:"name"`
 	DisplayName string `json:"display_name"`
 	Description string `json:"password"`
+	CreatedAt   time.Time
+	UpdatedAt   time.Time
+	DeletedAt   *time.Time `sql:"index"`
 }
