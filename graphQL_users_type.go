@@ -5,6 +5,7 @@ import (
 	"github.com/graphql-go/graphql"
 	"golang.org/x/crypto/bcrypt"
 	"strconv"
+	"github.com/ethereal-go/ethereal/root/app"
 )
 
 /**
@@ -88,8 +89,9 @@ var UserField = graphql.Field{
 		//jwtAuth := params.Context.Value("middlewareJWTToken").(middlewareJWTToken)
 		//
 		//if jwtAuth.included == false || jwtAuth.authenticated {
+		db := params.Context.Value("*Application").(*app.Application).Db
 			var users []*User
-			App.Db.Find(&users)
+		db.Find(&users)
 
 			idQuery, isOK := params.Args["id"].(string)
 
@@ -97,7 +99,7 @@ var UserField = graphql.Field{
 				for _, user := range users {
 					if strconv.Itoa(int(user.ID)) == idQuery {
 						var role Role
-						App.Db.Model(&user).Related(&role)
+						db.Model(&user).Related(&role)
 						user.Role = role
 						return []User{*user}, nil
 					}
@@ -106,7 +108,7 @@ var UserField = graphql.Field{
 
 			for _, user := range users {
 				var role Role
-				App.Db.Model(&user).Related(&role)
+				db.Model(&user).Related(&role)
 				user.Role = role
 			}
 
