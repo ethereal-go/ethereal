@@ -58,7 +58,6 @@ func Start() {
 		Mutation: rootMutation,
 	})
 
-	fmt.Println(App.Context)
 	h := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		opts := handler.NewRequestOptions(r)
 		result := graphql.Do(graphql.Params{

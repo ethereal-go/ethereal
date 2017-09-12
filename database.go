@@ -22,8 +22,13 @@ func Database() *gorm.DB {
 	return db
 }
 
+type EtherealModel struct{
+
+	ID        uint `json:"id";gorm:"primary_key"`
+}
+
 type User struct {
-	gorm.Model
+	EtherealModel
 	Email    string `json:"email";gorm:"type:unique_index"`
 	Name     string `json:"name"`
 	Password string `json:"password"`
@@ -33,7 +38,7 @@ type User struct {
 }
 
 type Role struct {
-	gorm.Model
+	EtherealModel
 	Name        string `json:"name"`
 	DisplayName string `json:"display_name"`
 	Description string `json:"password"`

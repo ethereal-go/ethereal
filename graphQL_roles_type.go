@@ -2,6 +2,7 @@ package ethereal
 
 import (
 	"github.com/graphql-go/graphql"
+	"fmt"
 )
 
 var roleType = graphql.NewObject(graphql.ObjectConfig{
@@ -46,6 +47,7 @@ var RoleField = graphql.Field{
 					}
 				}
 			}
+		fmt.Println(roles[1].ID, roles[1].Name)
 			return roles, nil
 	},
 }
