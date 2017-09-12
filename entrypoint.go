@@ -19,17 +19,6 @@ var Middleware *middleware.Middleware
 
 const runServer = "Now server is running on port "
 
-// Base structure
-//type Application struct {
-//	Db              *gorm.DB
-//	I18n            *i18n.I18n
-//	Middleware      *Middleware
-//	GraphQlMutation graphql.Fields
-//	GraphQlQuery    graphql.Fields
-//	Context         context.Context
-//	Config          *Config
-//}
-
 func Start() {
 	// Config variables
 	var (
