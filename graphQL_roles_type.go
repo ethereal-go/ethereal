@@ -1,7 +1,6 @@
 package ethereal
 
 import (
-	"fmt"
 	"github.com/ethereal-go/ethereal/root/app"
 	"github.com/graphql-go/graphql"
 	"strconv"
@@ -34,7 +33,7 @@ var RoleField = graphql.Field{
 	Description: string(ConstructorI18N().T(GetCnf("L18N.LOCALE").(string), "graphQL.Role.Description")),
 	Args: graphql.FieldConfigArgument{
 		"id": &graphql.ArgumentConfig{
-			Type: graphql.String,
+			Type: graphql.ID,
 		},
 	},
 	Resolve: func(params graphql.ResolveParams) (interface{}, error) {
@@ -51,7 +50,6 @@ var RoleField = graphql.Field{
 				}
 			}
 		}
-		fmt.Println(roles[1].ID, roles[1].Name)
 		return roles, nil
 	},
 }

@@ -83,6 +83,8 @@ func Start() {
 	}
 
 	fmt.Println(runServer + host)
-	http.ListenAndServe(":"+host, nil)
-
+	err := http.ListenAndServe(":"+host, nil)
+	if err != nil {
+		fmt.Println(err.Error())
+	}
 }

@@ -25,7 +25,6 @@ func Database() *gorm.DB {
 type EtherealModel struct{
 	ID        uint `json:"id";gorm:"primary_key"`
 	gorm.Model
-
 }
 
 type User struct {
