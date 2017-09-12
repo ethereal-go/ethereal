@@ -30,7 +30,7 @@ func GetCnf(name string, byDefault ...interface{}) interface{} {
 / Add value in Context structure
 */
 func CtxStruct(app *app.Application, value interface{}) context.Context {
-	app.Context = context.WithValue(App.Context, getType(value), value)
+	app.Context = context.WithValue(app.Context, getType(value), value)
 	return app.Context
 }
 
