@@ -3,6 +3,7 @@ package database
 import (
 	"errors"
 	"github.com/jinzhu/gorm"
+	"strings"
 )
 
 type DatabaseConnector interface {
@@ -11,6 +12,7 @@ type DatabaseConnector interface {
 }
 
 func FactoryDatabase(typeDB string) (DatabaseConnector, error) {
+	typeDB = strings.ToLower(typeDB)
 	switch typeDB {
 	case "mysql":
 		return DatabaseMysql{}, nil

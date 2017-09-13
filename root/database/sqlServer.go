@@ -22,9 +22,9 @@ func (m *SQLServer) Connection() *gorm.DB {
 }
 
 func (m *SQLServer) Parse() DatabaseConnector {
-	m.UserName = ethereal.GetCnf("DATABASE.USER").(string)
-	m.Host = ethereal.GetCnf("DATABASE.HOST").(string)
-	m.Password = ethereal.GetCnf("DATABASE.PASSWORD").(string)
-	m.DatabaseName = ethereal.GetCnf("DATABASE.NAME").(string)
+	m.UserName = ethereal.GetCnf("DATABASE.SQLSERVER.USER").(string)
+	m.Host = ethereal.GetCnf("DATABASE.SQLSERVER.HOST").(string)
+	m.Password = ethereal.GetCnf("DATABASE.SQLSERVER.PASSWORD").(string)
+	m.DatabaseName = ethereal.GetCnf("DATABASE.SQLSERVER.NAME").(string)
 	return m
 }

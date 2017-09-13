@@ -24,8 +24,8 @@ func (m *DatabaseMysql) Connection() *gorm.DB {
 
 func (m *DatabaseMysql) Parse() DatabaseConnector {
 	// configuration parameters
-	m.Login = ethereal.GetCnf("DATABASE.LOGIN").(string)
-	m.Password = ethereal.GetCnf("DATABASE.PASSWORD").(string)
-	m.DatabaseName = ethereal.GetCnf("DATABASE.NAME").(string)
+	m.Login = ethereal.GetCnf("DATABASE.MYSQL.LOGIN").(string)
+	m.Password = ethereal.GetCnf("DATABASE.MYSQL.PASSWORD").(string)
+	m.DatabaseName = ethereal.GetCnf("DATABASE.MYSQL.NAME").(string)
 	return m
 }

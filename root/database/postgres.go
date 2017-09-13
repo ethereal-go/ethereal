@@ -27,10 +27,10 @@ func (m *DatabasePostgres) Connection() *gorm.DB {
 }
 
 func (m *DatabasePostgres) Parse() DatabaseConnector {
-	m.User = ethereal.GetCnf("DATABASE.USER").(string)
-	m.Host = ethereal.GetCnf("DATABASE.HOST").(string)
-	m.Password = ethereal.GetCnf("DATABASE.PASSWORD").(string)
-	m.DatabaseName = ethereal.GetCnf("DATABASE.NAME").(string)
-	m.SslMode = ethereal.GetCnf("DATABASE.SSLMODE").(string)
+	m.User = ethereal.GetCnf("DATABASE.POSTGRES.USER").(string)
+	m.Host = ethereal.GetCnf("DATABASE.POSTGRES.HOST").(string)
+	m.Password = ethereal.GetCnf("DATABASE.POSTGRES.PASSWORD").(string)
+	m.DatabaseName = ethereal.GetCnf("DATABASE.POSTGRES.NAME").(string)
+	m.SslMode = ethereal.GetCnf("DATABASE.POSTGRES.SSLMODE").(string)
 	return m
 }
