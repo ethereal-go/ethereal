@@ -12,6 +12,7 @@ import (
 	"net/http"
 	"path"
 	"runtime"
+	"github.com/ethereal-go/ethereal/root/config"
 )
 
 var App app.Application
@@ -22,8 +23,8 @@ const runServer = "Now server is running on port "
 func Start() {
 	// Config variables
 	var (
-		debug string = GetCnf("GRAPHQL.DEBUG").(string)
-		host  string = GetCnf("HOST.PORT").(string)
+		debug string = config.GetCnf("GRAPHQL.DEBUG").(string)
+		host  string = config.GetCnf("HOST.PORT").(string)
 	)
 
 	App := app.Application{

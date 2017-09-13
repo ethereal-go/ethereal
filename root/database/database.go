@@ -13,15 +13,16 @@ type DatabaseConnector interface {
 
 func FactoryDatabase(typeDB string) (DatabaseConnector, error) {
 	typeDB = strings.ToLower(typeDB)
+
 	switch typeDB {
 	case "mysql":
-		return DatabaseMysql{}, nil
+		return &DatabaseMysql{}, nil
 	case "postgres":
-		return DatabasePostgres{}, nil
+		return &DatabasePostgres{}, nil
 	case "sqlite3":
-		return DatabasePostgres{}, nil
-	case "sqlServer":
-		return SQLServer{}, nil
+		return &DatabasePostgres{}, nil
+	case "sqlserver":
+		return &SQLServer{}, nil
 	default:
 		return nil, errors.New("You have not selected a database type.")
 	}

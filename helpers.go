@@ -2,29 +2,27 @@ package ethereal
 
 import (
 	"context"
-	"github.com/spf13/viper"
-	"os"
 	"github.com/ethereal-go/ethereal/root/app"
 	"reflect"
-	"strings"
 )
 
 // Here functions helpers
 // ----------------------------------
 
-/**
-/ Get configuration value
-*/
-
-func GetCnf(name string, byDefault ...interface{}) interface{} {
-	var temp string
-	if temp = os.Getenv(name); temp == "" {
-		if temp = viper.GetString(strings.ToLower(name)); temp == "" {
-			viper.SetDefault(name, byDefault)
-		}
-	}
-	return temp
-}
+///**
+/// Get configuration value
+//*/
+//
+//func GetCnf(name string, byDefault ...interface{}) interface{} {
+//	var temp string
+//	if temp = os.Getenv(name); temp == "" {
+//		if temp = viper.GetString(strings.ToLower(name)); temp == "" {
+//			viper.SetDefault(name, byDefault)
+//		}
+//	}
+//	return temp
+//
+//}
 
 /**
 / Add value in Context structure

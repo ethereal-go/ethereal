@@ -3,12 +3,11 @@ package ethereal
 import (
 	"github.com/ethereal-go/ethereal/root/database"
 	"github.com/jinzhu/gorm"
+	"github.com/ethereal-go/ethereal/root/config"
 )
 
-// TODO to install different variations of database
-
 func Database() *gorm.DB {
-	db, err := database.FactoryDatabase(GetCnf("DATABASE.TYPE").(string))
+	db, err := database.FactoryDatabase(config.GetCnf("DATABASE.TYPE").(string))
 	if err != nil {
 		panic(err)
 	}

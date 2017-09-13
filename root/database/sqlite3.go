@@ -1,7 +1,6 @@
 package database
 
 import (
-	"github.com/ethereal-go/ethereal"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/sqlite"
 )
@@ -19,5 +18,6 @@ func (m *Sqlite3) Connection() *gorm.DB {
 }
 
 func (m *Sqlite3) Parse() DatabaseConnector {
-	m.Path = ethereal.GetCnf("DATABASE.SQLITE3.PATH").(string)
+	//m.Path = ethereal.GetCnf("DATABASE.SQLITE3.PATH").(string)
+	return m
 }

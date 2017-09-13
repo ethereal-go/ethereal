@@ -1,7 +1,6 @@
 package database
 
 import (
-	"github.com/ethereal-go/ethereal"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/mssql"
 )
@@ -22,9 +21,9 @@ func (m *SQLServer) Connection() *gorm.DB {
 }
 
 func (m *SQLServer) Parse() DatabaseConnector {
-	m.UserName = ethereal.GetCnf("DATABASE.SQLSERVER.USER").(string)
-	m.Host = ethereal.GetCnf("DATABASE.SQLSERVER.HOST").(string)
-	m.Password = ethereal.GetCnf("DATABASE.SQLSERVER.PASSWORD").(string)
-	m.DatabaseName = ethereal.GetCnf("DATABASE.SQLSERVER.NAME").(string)
+	//m.UserName = ethereal.GetCnf("DATABASE.SQLSERVER.USER").(string)
+	//m.Host = ethereal.GetCnf("DATABASE.SQLSERVER.HOST").(string)
+	//m.Password = ethereal.GetCnf("DATABASE.SQLSERVER.PASSWORD").(string)
+	//m.DatabaseName = ethereal.GetCnf("DATABASE.SQLSERVER.NAME").(string)
 	return m
 }
