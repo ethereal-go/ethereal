@@ -9,21 +9,6 @@ import (
 // Here functions helpers
 // ----------------------------------
 
-///**
-/// Get configuration value
-//*/
-//
-//func GetCnf(name string, byDefault ...interface{}) interface{} {
-//	var temp string
-//	if temp = os.Getenv(name); temp == "" {
-//		if temp = viper.GetString(strings.ToLower(name)); temp == "" {
-//			viper.SetDefault(name, byDefault)
-//		}
-//	}
-//	return temp
-//
-//}
-
 /**
 / Add value in Context structure
 */
@@ -47,11 +32,3 @@ func getType(unknown interface{}) string {
 		return t.Name()
 	}
 }
-
-//func BasePathClient() string {
-//	workPath, err := os.Getwd()
-//	if err != nil {
-//		panic(err)
-//	}
-//	return workPath
-//}
