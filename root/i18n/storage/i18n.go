@@ -1,4 +1,4 @@
-package mysql
+package storage
 
 import (
 	localeI18n "github.com/ethereal-go/ethereal/root/i18n"
@@ -9,25 +9,17 @@ import (
 	"strings"
 )
 
-type LocaleStorageMysql struct {
+type LocaleStorage struct {
 	DB   *gorm.DB
 	I18n *i18n.I18n
 }
 
-func (l LocaleStorageMysql) EstablishConnection(config interface{}) localeI18n.FillLocale {
-	user := config.(map[string]string)["login"]
-	password := config.(map[string]string)["password"]
-	dbName := config.(map[string]string)["name"]
-
-	db, err := gorm.Open("mysql", user+":"+password+"@/"+dbName+"?charset=utf8&parseTime=True&loc=Local")
-	if err != nil {
-		panic(err)
-	}
+func (l LocaleStorage) EstablishConnection(db *gorm.DB) localeI18n.FillLocale {
 	l.I18n = i18n.New(database.New(db))
 	return l
 }
 
-func (l LocaleStorageMysql) Add(storage localeI18n.StorageLocale) {
+func (l LocaleStorage) Add(storage localeI18n.StorageLocale) {
 	for locale, mapValues := range storage.Structure {
 		for key, value := range mapValues {
 			l.I18n.SaveTranslation(&i18n.Translation{Key: key, Locale: locale, Value: value})
@@ -83,7 +75,7 @@ func (l LocaleStorageMysql) Add(storage localeI18n.StorageLocale) {
 /**
 / Function merge structure graph i!8n
 */
-func (l LocaleStorageMysql) Merge(merge map[string]map[string]string, storage localeI18n.StorageLocale) localeI18n.FillLocale {
+func (l LocaleStorage) Merge(merge map[string]map[string]string, storage localeI18n.StorageLocale) localeI18n.FillLocale {
 	for locale, mapValues := range merge {
 		for key, value := range mapValues {
 			if _, exist := storage.Structure[locale]; !exist {

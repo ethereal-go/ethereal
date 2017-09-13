@@ -1,9 +1,12 @@
 package i18n
 
-import "github.com/ethereal-go/ethereal/root/config"
+import (
+	"github.com/ethereal-go/ethereal/root/config"
+	"github.com/jinzhu/gorm"
+)
 
 type FillLocale interface {
-	EstablishConnection(configuration interface{}) FillLocale
+	EstablishConnection(*gorm.DB) FillLocale
 	Add(StorageLocale)
 	Merge(map[string]map[string]string, StorageLocale) FillLocale
 }
