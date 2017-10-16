@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/ethereal-go/ethereal/root/app"
+	"github.com/ethereal-go/ethereal/root/config"
 	"github.com/ethereal-go/ethereal/root/middleware"
 	"github.com/graphql-go/graphql"
 	"github.com/graphql-go/handler"
@@ -12,11 +13,12 @@ import (
 	"net/http"
 	"path"
 	"runtime"
-	"github.com/ethereal-go/ethereal/root/config"
 )
 
-var App app.Application
-var Middleware *middleware.Middleware
+var (
+	App        app.Application
+	Middleware *middleware.Middleware
+)
 
 const runServer = "Now server is running on port "
 
