@@ -4,11 +4,11 @@ import (
 	"strings"
 	"path/filepath"
 	"github.com/spf13/viper"
-	"fmt"
 	"os"
 	"github.com/joho/godotenv"
 	"log"
 	"github.com/ethereal-go/ethereal/root/config"
+	"fmt"
 )
 const (
 	FileName = "app.json"
