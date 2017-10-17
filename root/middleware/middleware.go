@@ -4,6 +4,7 @@ import(
 	"github.com/justinas/alice"
 	"github.com/ethereal-go/ethereal/root/app"
 	"net/http"
+	"log"
 )
 
 /**
@@ -26,7 +27,7 @@ func (m *Middleware) AddMiddleware(middleware ...AddMiddleware) {
 }
 
 // Method loading middleware for application
-func (m Middleware) LoadApplication(application *app.Application) []alice.Constructor {
+func (m *Middleware) LoadApplication(application *app.Application) []alice.Constructor {
 	for _, middleware := range m.AllMiddleware {
 		middleware.Add(&m.IncludeMiddleware, application)
 	}
@@ -34,6 +35,7 @@ func (m Middleware) LoadApplication(application *app.Application) []alice.Constr
 }
 
 func (m Middleware) GetHandler(h http.HandlerFunc) http.Handler {
+	log.Println(m.IncludeMiddleware, "middlewares")
 	return alice.New(m.IncludeMiddleware...).Then(h)
 }
 // ---- waiting for your implementation ------
