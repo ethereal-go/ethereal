@@ -4,7 +4,6 @@ import(
 	"github.com/justinas/alice"
 	"github.com/ethereal-go/ethereal/root/app"
 	"net/http"
-	"log"
 )
 
 /**
@@ -35,7 +34,6 @@ func (m *Middleware) LoadApplication(application *app.Application) []alice.Const
 }
 
 func (m Middleware) GetHandler(h http.HandlerFunc) http.Handler {
-	log.Println(m.IncludeMiddleware, "middlewares")
 	return alice.New(m.IncludeMiddleware...).Then(h)
 }
 // ---- waiting for your implementation ------
